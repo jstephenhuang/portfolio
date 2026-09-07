@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import cx from "classnames";
 
 import styles from "./styles.module.scss";
 
@@ -9,7 +9,7 @@ interface LabelProps extends React.ComponentPropsWithRef<"span"> {
 }
 
 export const Label: React.FC<LabelProps> = ({ children, className, tone = "neutral", ...props }) => (
-  <span className={classNames(styles.label, className)} data-tone={tone} {...props}>
+  <span className={cx(styles.label, className)} data-tone={tone} {...props}>
     <span className={styles.text}>{children}</span>
   </span>
 );

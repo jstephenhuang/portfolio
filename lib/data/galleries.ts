@@ -1,7 +1,7 @@
 import { rootItems } from ".";
 
 export const galleryItemIds = {
-  home: ["world-cup-2026", "yap", "crafting-interpreters", "my-dumps"],
+  home: ["world-cup-2026", "yap", "crafting-interpreters"],
   work: [],
   projects: [],
   journal: ["aoc"],

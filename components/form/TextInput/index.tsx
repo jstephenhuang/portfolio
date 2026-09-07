@@ -1,6 +1,6 @@
 "use client";
 
-import classNames from "classnames";
+import cx from "classnames";
 import type React from "react";
 import { get, useFormContext, type RegisterOptions } from "react-hook-form";
 
@@ -33,7 +33,7 @@ const TextInput: React.FC<Props> = ({
 
   return (
     <div
-      className={classNames(
+      className={cx(
         styles["container"],
         { [styles["container--full-width"]]: fullWidth },
         containerClassName
@@ -41,7 +41,7 @@ const TextInput: React.FC<Props> = ({
     >
       <input
         id={id ?? name}
-        className={classNames(styles["text-input"], className, {
+        className={cx(styles["text-input"], className, {
           [styles["text-input--error"]]: !!error,
         })}
         {...props}

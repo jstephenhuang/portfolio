@@ -1,7 +1,7 @@
 "use client";
 
 import { CircleNotchIcon } from "@phosphor-icons/react";
-import classNames from "classnames";
+import cx from "classnames";
 
 import styles from "./styles.module.scss";
 
@@ -17,7 +17,7 @@ const Spinner = ({ size = 16, className, label = "Loading" }: SpinnerProps) => (
     weight="bold"
     role="status"
     aria-label={label}
-    className={classNames(styles.spinner, className)}
+    className={cx(styles.spinner, className)}
   />
 );
 

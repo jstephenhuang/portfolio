@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import cx from "classnames";
 
 import { Label } from "@/components/ui";
 
@@ -9,7 +9,7 @@ interface BlockWrapperProps extends React.ComponentPropsWithRef<"section"> {
 }
 
 const BlockWrapper: React.FC<BlockWrapperProps> = ({ children, className, label, ...props }) => (
-  <section className={classNames(styles.block, className)} {...props}>
+  <section className={cx(styles.block, className)} {...props}>
     <Label tone="info">
       <span className={styles.blockLabel}>{label}</span>
     </Label>

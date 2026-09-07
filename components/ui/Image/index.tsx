@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import cx from "classnames";
 import NextImage, { type ImageProps } from "next/image";
 
 import styles from "./styles.module.scss";
@@ -13,7 +13,7 @@ export const Image: React.FC<Props> = ({ className, alt = "", width, height, ...
   const dimensionsDefined = width !== undefined && height !== undefined;
   return (
     <NextImage
-      className={classNames(styles.image, className)}
+      className={cx(styles.image, className)}
       alt={alt}
       width={dimensionsDefined ? width : DEFAULT_DIMENSION}
       height={dimensionsDefined ? height : DEFAULT_DIMENSION}

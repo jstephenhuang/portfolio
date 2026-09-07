@@ -1,5 +1,5 @@
-import { AuthError } from "next-auth";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { AuthError } from "next-auth";
 
 type Success<T> = {
   data: T;

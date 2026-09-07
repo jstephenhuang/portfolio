@@ -10,7 +10,7 @@ import { useTheme } from "next-themes";
 import { useEffect, useRef } from "react";
 import { useSettings } from "../contexts/SettingsContext";
 
-import classNames from "classnames";
+import cx from "classnames";
 import styles from "./styles.module.scss";
 
 const navigationItems = [
@@ -104,7 +104,7 @@ const Nav: React.FC = () => {
 
             return (
               <Link
-                className={classNames(styles.link, active && styles.activeLink)}
+                className={cx(styles.link, active && styles.activeLink)}
                 href={href}
                 aria-current={active ? "page" : undefined}
                 key={href}
@@ -114,14 +114,14 @@ const Nav: React.FC = () => {
             );
           })}
         </div>
-        <div className={classNames(styles.settings)}>
+        <div className={cx(styles.settings)}>
           <Button.Toggle active={isSettingsOpen} onClick={() => setIsSettingsOpen(!isSettingsOpen)}>
             settings
           </Button.Toggle>
           <AnimatePresence initial={false}>
             {isSettingsOpen && (
               <motion.div
-                className={classNames(styles.settingsContent)}
+                className={cx(styles.settingsContent)}
                 initial={{ height: 0, opacity: 0, y: -4 }}
                 animate={{ height: "auto", opacity: 1, y: 0 }}
                 exit={{ height: 0, opacity: 0, y: -4, pointerEvents: "none" }}

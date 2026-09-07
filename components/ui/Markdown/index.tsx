@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import cx from "classnames";
 import ReactMarkdown, { type Components, type ExtraProps } from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
@@ -56,7 +56,7 @@ const components: Components = {
 
 export const Markdown: React.FC<MarkdownProps> = ({ children, className }) => {
   return (
-    <article className={classNames(styles.markdown, className)}>
+    <article className={cx(styles.markdown, className)}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[[rehypeHighlight, { detect: true }]]}
