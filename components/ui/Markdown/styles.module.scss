@@ -181,6 +181,16 @@
     text-decoration-thickness: 1px;
   }
 
+  :global(.katex-display) {
+    overflow-x: auto;
+    margin: var(--spacing-state) 0;
+    padding: var(--spacing-house) 0;
+  }
+
+  :global(.katex .msupsub) {
+    font-size: 0.9em;
+  }
+
   :global(.hljs-comment),
   :global(.hljs-quote) {
     color: #7e8797;

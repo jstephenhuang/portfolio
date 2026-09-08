@@ -1,6 +1,22 @@
 # Dump content
 
-Each dump is stored in its own directory with a `metadata.json` file. Content is grouped by date under the `body` property.
+Each dump is stored in its own directory with a `metadata.json` file. The directory name and metadata `id` must match. Content is grouped by date under the `body` property.
+
+Create a dump with:
+
+```sh
+pnpm create:dump my-project projects
+```
+
+Use a comma-separated gallery list when a dump belongs in multiple galleries:
+
+```sh
+pnpm create:dump my-project home,projects
+```
+
+The command creates the dump directory, validated metadata, and `note1.md`. The first body entry uses the current local date. Replace the generated description, image, dimensions, and content before publishing.
+
+Valid galleries are `home`, `work`, `projects`, and `journal`. Gallery membership lives in each dump's `galleries` field, so no separate import or gallery registry needs updating.
 
 ## Markdown
 
@@ -14,6 +30,7 @@ For example, `db/dumps/aoc/day13.md` is referenced as `day13.md` in `db/dumps/ao
 
 - `type`: Must be `"markdown"`.
 - `src`: Path to a `.md` file relative to the dump directory.
+- `compact`: Optional. Defaults to `true`. Set it to `false` to render the full entry without Show more or Show less controls.
 
 ## Images
 

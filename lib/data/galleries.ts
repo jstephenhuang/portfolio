@@ -1,27 +1,25 @@
-import { rootItems } from ".";
+import "server-only";
 
-export const galleryItemIds = {
-  home: ["world-cup-2026", "yap", "crafting-interpreters"],
-  work: [],
-  projects: [],
-  journal: ["aoc"],
-} as const;
+import { cache } from "react";
 
-export type GalleryId = keyof typeof galleryItemIds;
+import { err, isErr, ok, type Result } from "@/lib/error";
 
-export const getGalleryItems = (galleryId: GalleryId) => {
-  const itemIds: readonly string[] = galleryItemIds[galleryId];
-  const duplicateItemIds = itemIds.filter((itemId, index) => itemIds.indexOf(itemId) !== index);
+import { getAllDumpMetadata } from "./dumps";
+import { type DumpMetadata, type GalleryId, type Item } from "./schema";
 
-  if (duplicateItemIds.length > 0) {
-    throw new Error(`Duplicate item IDs in ${galleryId}: ${duplicateItemIds.join(", ")}`);
-  }
+const toItem = ({ body: _body, galleries: _galleries, ...item }: DumpMetadata): Item => item;
 
-  return itemIds.map((itemId) => {
-    const item = rootItems.find((candidate) => candidate.id === itemId);
+export const getGalleryItems = cache(async (galleryId: GalleryId): Promise<Result<Item[]>> => {
+  const metadataResult = await getAllDumpMetadata();
 
-    if (!item) throw new Error(`Unknown item ID in ${galleryId}: ${itemId}`);
+  if (isErr(metadataResult)) return err(metadataResult.error, false);
 
-    return item;
-  });
-};
+  const items = metadataResult.data
+    .filter((metadata) => metadata.galleries.includes(galleryId))
+    .sort((first, second) => first.id.localeCompare(second.id))
+    .map(toItem);
+
+  return ok(items);
+});
+
+export type { GalleryId } from "./schema";

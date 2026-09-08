@@ -1,5 +1,6 @@
 "use client";
 
+import cx from "classnames";
 import type React from "react";
 
 import * as AirHockey from "@/components/primitives/AirHockey";
@@ -15,19 +16,25 @@ interface PortfolioGalleryProps {
   storageKey: string;
 }
 
-const PortfolioGallery: React.FC<PortfolioGalleryProps> = ({ items, storageKey }) => {
+const Description: React.FC<React.ComponentPropsWithRef<"div">> = ({ children, className, ...props }) => (
+  <div className={cx(styles.description, className)} {...props}>
+    {children}
+  </div>
+);
+
+const Root: React.FC<React.PropsWithChildren<PortfolioGalleryProps>> = ({ children, items, storageKey }) => {
   const { bounce, friction, layout } = useSettings();
   const { arrangedItems, isLoading, savePosition, bringForward } = useArrangedItems(items, storageKey);
   const isLocked = layout === "lock";
 
   return (
     <main className={styles.page}>
+      {children}
       <AirHockey.Root
         className={`${styles.board} ${isLocked ? styles.fixed : ""}`}
         physics={{ bounce, friction }}
         off={isLocked}
       >
-        {!isLoading && arrangedItems.length === 0 && <p className={styles.empty}>Nothing here yet.</p>}
         {!isLoading &&
           arrangedItems.map((item) => (
             <AirHockey.Item
@@ -55,4 +62,4 @@ const PortfolioGallery: React.FC<PortfolioGalleryProps> = ({ items, storageKey }
   );
 };
 
-export default PortfolioGallery;
+export { Root, Description };

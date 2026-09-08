@@ -26,18 +26,17 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({ item }) => {
       animate="rest"
     >
       <div className={styles.card}>
-        <div className={styles.imageWrapper}>
-          <Image className={styles.image} src={item.image} alt={item.title} draggable={false} />
-        </div>
         <motion.div
-          className={styles.title}
+          className={styles.imageWrapper}
           variants={{
-            rest: { opacity: 0, y: -4 },
-            hover: { opacity: 1, y: 0 },
+            rest: { opacity: 1 },
+            hover: { opacity: 0.6 },
           }}
+          transition={{ duration: 0.1 }}
         >
-          {item.title}
+          <Image className={styles.image} src={item.image} alt={item.title} draggable={false} />
         </motion.div>
+        <div className={styles.title}>{item.title}</div>
       </div>
     </MotionLink>
   );

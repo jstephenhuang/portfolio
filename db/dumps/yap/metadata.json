@@ -5,11 +5,12 @@
   "image": "/cake.gif",
   "width": 150,
   "defaultPosition": {
-    "x": 0.2,
-    "y": 0.3
+    "x": 0.74,
+    "y": 0.28
   },
+  "galleries": ["projects"],
   "links": {
-    "github": "https://github.com/JStephenHuang/yap"
+    "github": "https://github.com/jstephenhuang/yap"
   },
   "body": {}
 }

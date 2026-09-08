@@ -13,15 +13,16 @@ const COLLAPSED_HEIGHT = 260;
 
 interface MarkdownBlockProps {
   body: string;
+  compact?: boolean;
   id: string;
   src: string;
 }
 
-const MarkdownBlock: React.FC<MarkdownBlockProps> = ({ body, id, src }) => {
+const MarkdownBlock: React.FC<MarkdownBlockProps> = ({ body, compact = true, id, src }) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const [contentHeight, setContentHeight] = useState(COLLAPSED_HEIGHT);
   const [expanded, setExpanded] = useState(false);
-  const canExpand = contentHeight > COLLAPSED_HEIGHT + 1;
+  const canExpand = compact && contentHeight > COLLAPSED_HEIGHT + 1;
 
   useEffect(() => {
     const content = contentRef.current;
@@ -35,7 +36,15 @@ const MarkdownBlock: React.FC<MarkdownBlockProps> = ({ body, id, src }) => {
     observer.observe(content);
 
     return () => observer.disconnect();
-  }, []);
+  }, [compact]);
+
+  if (!compact) {
+    return (
+      <BlockWrapper id={id} label={getBlockLabel(src)}>
+        <Markdown className={styles.markdownContent}>{body}</Markdown>
+      </BlockWrapper>
+    );
+  }
 
   return (
     <BlockWrapper id={id} label={getBlockLabel(src)}>

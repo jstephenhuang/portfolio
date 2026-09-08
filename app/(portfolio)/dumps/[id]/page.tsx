@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { getDumpMetadata } from "@/lib/data";
-import { getDumpLogs } from "@/lib/data/dumps";
+import { getDumpLogs, getDumpMetadata } from "@/lib/data/dumps";
 import { isErr } from "@/lib/error";
 
 import { Header, ImageBlock, MarkdownBlock, VideoBlock } from "./_components";
@@ -13,7 +12,11 @@ interface DumpPageProps {
 
 const DumpPage: React.FC<DumpPageProps> = async ({ params }) => {
   const { id } = await params;
-  const metadata = getDumpMetadata(id);
+  const metadataResult = await getDumpMetadata(id);
+
+  if (isErr(metadataResult)) throw metadataResult.error;
+
+  const metadata = metadataResult.data;
 
   if (!metadata) notFound();
 
@@ -39,7 +42,15 @@ const DumpPage: React.FC<DumpPageProps> = async ({ params }) => {
                     const blockId = `${entryId}-${block.type}-${index + 1}`;
 
                     if (block.type === "markdown") {
-                      return <MarkdownBlock body={block.body} id={blockId} src={block.src} key={blockId} />;
+                      return (
+                        <MarkdownBlock
+                          body={block.body}
+                          compact={block.compact}
+                          id={blockId}
+                          src={block.src}
+                          key={blockId}
+                        />
+                      );
                     }
 
                     if (block.type === "image") {

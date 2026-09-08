@@ -3,6 +3,9 @@ import { z } from "zod";
 const dumpIdPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const markdownSourcePattern = /^[a-zA-Z0-9][a-zA-Z0-9/_-]*\.md$/;
 
+export const dumpIdSchema = z.string().regex(dumpIdPattern);
+export const galleryIdSchema = z.enum(["home", "work", "projects", "journal"]);
+
 const isCalendarDate = (value: string): boolean => {
   const isoDate = value.replaceAll("/", "-");
   const parsedDate = new Date(`${isoDate}T00:00:00.000Z`);
@@ -27,7 +30,7 @@ export const itemLinksSchema = z.object({
 });
 
 export const itemSchema = z.object({
-  id: z.string().regex(dumpIdPattern),
+  id: dumpIdSchema,
   title: z.string().min(1),
   description: z.string(),
   image: z.string().min(1),
@@ -39,6 +42,7 @@ export const itemSchema = z.object({
 export const markdownBlockSchema = z.object({
   type: z.literal("markdown"),
   src: z.string().regex(markdownSourcePattern),
+  compact: z.boolean().optional(),
 });
 
 export const imageBlockSchema = z.object({
@@ -73,10 +77,17 @@ export const dumpDateSchema = z
   });
 
 export const dumpMetadataSchema = itemSchema.extend({
+  galleries: z
+    .array(galleryIdSchema)
+    .min(1)
+    .refine((galleries) => new Set(galleries).size === galleries.length, {
+      message: "Gallery IDs must be unique.",
+    }),
   body: z.record(dumpDateSchema, z.array(dumpContentBlockSchema).min(1)),
 });
 
 export type Position = z.infer<typeof positionSchema>;
 export type Item = z.infer<typeof itemSchema>;
+export type GalleryId = z.infer<typeof galleryIdSchema>;
 export type DumpContentBlock = z.infer<typeof dumpContentBlockSchema>;
 export type DumpMetadata = z.infer<typeof dumpMetadataSchema>;

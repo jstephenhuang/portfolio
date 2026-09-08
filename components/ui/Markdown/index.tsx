@@ -1,7 +1,9 @@
 import cx from "classnames";
 import ReactMarkdown, { type Components, type ExtraProps } from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
+import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
 
 import { Image } from "../Image";
 import { Link } from "../Link";
@@ -58,8 +60,8 @@ export const Markdown: React.FC<MarkdownProps> = ({ children, className }) => {
   return (
     <article className={cx(styles.markdown, className)}>
       <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        rehypePlugins={[[rehypeHighlight, { detect: true }]]}
+        remarkPlugins={[remarkGfm, remarkMath]}
+        rehypePlugins={[rehypeKatex, [rehypeHighlight, { detect: true }]]}
         components={components}
       >
         {children}

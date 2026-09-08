@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 
 import { Link } from "@/components/ui";
-import { rootItems } from "@/lib/data";
+import { getDumpMetadata } from "@/lib/data/dumps";
+import { isErr } from "@/lib/error";
 
 import styles from "./styles.module.scss";
 
@@ -11,7 +12,11 @@ interface AdminDumpPageProps {
 
 const AdminDumpPage: React.FC<AdminDumpPageProps> = async ({ params }) => {
   const { id } = await params;
-  const item = rootItems.find((candidate) => candidate.id === id);
+  const metadataResult = await getDumpMetadata(id);
+
+  if (isErr(metadataResult)) throw metadataResult.error;
+
+  const item = metadataResult.data;
 
   if (!item) notFound();
 

@@ -301,3 +301,18 @@ p {
 * {
   box-sizing: border-box;
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  html.theme-transition,
+  html.theme-transition *,
+  html.theme-transition *::before,
+  html.theme-transition *::after {
+    transition:
+      background-color 240ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 240ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 240ms cubic-bezier(0.22, 1, 0.36, 1),
+      color 240ms cubic-bezier(0.22, 1, 0.36, 1),
+      fill 240ms cubic-bezier(0.22, 1, 0.36, 1),
+      stroke 240ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+  }
+}

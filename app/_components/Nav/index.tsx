@@ -13,6 +13,8 @@ import { useSettings } from "../contexts/SettingsContext";
 import cx from "classnames";
 import styles from "./styles.module.scss";
 
+const THEME_TRANSITION_DURATION = 240;
+
 const navigationItems = [
   { label: "jsh", href: "/" },
   { label: "work", href: "/work" },
@@ -62,10 +64,32 @@ const PhysicsToggle: React.FC<PhysicsToggleProps> = ({ label, value, onChange })
 const ThemeToggle: React.FC = () => {
   const mounted = useMounted();
   const { resolvedTheme, setTheme } = useTheme();
+  const transitionTimeoutRef = useRef<number | null>(null);
+
+  useEffect(
+    () => () => {
+      if (transitionTimeoutRef.current !== null) window.clearTimeout(transitionTimeoutRef.current);
+      document.documentElement.classList.remove("theme-transition");
+    },
+    []
+  );
 
   if (!mounted) return <span>loading...</span>;
 
   const isDark = resolvedTheme === "dark";
+
+  const toggleTheme = () => {
+    const root = document.documentElement;
+
+    if (transitionTimeoutRef.current !== null) window.clearTimeout(transitionTimeoutRef.current);
+
+    root.classList.add("theme-transition");
+    setTheme(isDark ? "light" : "dark");
+    transitionTimeoutRef.current = window.setTimeout(() => {
+      root.classList.remove("theme-transition");
+      transitionTimeoutRef.current = null;
+    }, THEME_TRANSITION_DURATION);
+  };
 
   return (
     // <div className={styles.toggles}>
@@ -76,7 +100,7 @@ const ThemeToggle: React.FC = () => {
     //     dark
     //   </Button.Toggle>
     // </div>
-    <Button.Link onClick={() => setTheme(isDark ? "light" : "dark")}>{isDark ? "light" : "dark"}</Button.Link>
+    <Button.Link onClick={toggleTheme}>{isDark ? "light" : "dark"}</Button.Link>
   );
 };
 

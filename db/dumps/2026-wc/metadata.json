@@ -1,0 +1,18 @@
+{
+  "id": "2026-wc",
+  "title": "2026 world cup",
+  "description": "A calibrated random forest trained on historical international matches (Kaggle set) and used to simulate 20,000 2026 World Cups helping me win a bracket challenge with a prize of 400$.",
+  "image": "/random-forest.png",
+  "width": 500,
+  "defaultPosition": {
+    "x": 0.12,
+    "y": 0.18
+  },
+  "galleries": ["projects"],
+  "links": {
+    "github": "https://github.com/jstephenhuang/2026-world-cup"
+  },
+  "body": {
+    "2026/09/03": [{ "type": "markdown", "src": "intro.md", "compact": false }]
+  }
+}

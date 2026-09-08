@@ -13,13 +13,23 @@
   height: 100vh;
 }
 
-.empty {
-  position: absolute;
-  top: 50svh;
-  left: 50%;
-  margin: 0;
-  color: var(--color-text-secondary);
-  transform: translate(-50%, -50%);
+.description {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: var(--color-gray-400);
+  pointer-events: none;
+  padding: var(--spacing-street);
+
+  & > * {
+    max-width: 500px;
+    margin: 0;
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
 }
 
 .item {

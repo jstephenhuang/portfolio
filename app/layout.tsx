@@ -1,3 +1,4 @@
+import "katex/dist/katex.min.css";
 import "@/styles/globals.scss";
 import cx from "classnames";
 import type { Metadata } from "next";
