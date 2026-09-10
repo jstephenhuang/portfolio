@@ -13,6 +13,6 @@
     "github": "https://github.com/jstephenhuang/2026-world-cup"
   },
   "body": {
-    "2026/09/03": [{ "type": "markdown", "src": "intro.md", "compact": false }]
+    "2026/08/03": [{ "type": "markdown", "src": "rf.md", "compact": false }]
   }
 }

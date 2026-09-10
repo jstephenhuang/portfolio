@@ -11,6 +11,15 @@ import styles from "./styles.module.scss";
 
 const COLLAPSED_HEIGHT = 260;
 
+const getTextStats = (body: string) => {
+  const text = body.trim();
+
+  return {
+    characters: Array.from(text).length,
+    words: text ? text.split(/\s+/u).length : 0,
+  };
+};
+
 interface MarkdownBlockProps {
   body: string;
   compact?: boolean;
@@ -23,6 +32,8 @@ const MarkdownBlock: React.FC<MarkdownBlockProps> = ({ body, compact = true, id,
   const [contentHeight, setContentHeight] = useState(COLLAPSED_HEIGHT);
   const [expanded, setExpanded] = useState(false);
   const canExpand = compact && contentHeight > COLLAPSED_HEIGHT + 1;
+  const stats = getTextStats(body);
+  const textStats = `${stats.words.toLocaleString()} words · ${stats.characters.toLocaleString()} characters`;
 
   useEffect(() => {
     const content = contentRef.current;
@@ -41,6 +52,7 @@ const MarkdownBlock: React.FC<MarkdownBlockProps> = ({ body, compact = true, id,
   if (!compact) {
     return (
       <BlockWrapper id={id} label={getBlockLabel(src)}>
+        <p className={styles.markdownStats}>{textStats}</p>
         <Markdown className={styles.markdownContent}>{body}</Markdown>
       </BlockWrapper>
     );
@@ -48,6 +60,7 @@ const MarkdownBlock: React.FC<MarkdownBlockProps> = ({ body, compact = true, id,
 
   return (
     <BlockWrapper id={id} label={getBlockLabel(src)}>
+      <p className={styles.markdownStats}>{textStats}</p>
       <motion.div
         className={styles.markdownViewport}
         id={`${id}-content`}

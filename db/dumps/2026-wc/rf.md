@@ -6,7 +6,7 @@ _I did use ChatGPT to employ better words and suggest more coherent ways to writ
 
 # Context
 
-Back when March Madness was happening, I participated in my class's NCAA basketball tournament bracket. I do play basketball, but I have zero knowledge of collegiate basketball teams and players. I did not want to create my bracket based on feeling, with zero strategy. Therefore, I did a little research on some ways I could use machine learning to help me create my picks. I stumbled upon random forests. It seemed simple and intuitive, and so I dove a little deeper into it, understanding the foundations of random forests. Furthermore, there were multiple Kaggle datasets containing relevant data from previous NCAA tournaments. Unfortunately, I did not have time to implement a working random forest to help with the bracket. I ended up making my picks from pure feeling and instinct. I placed low on the leaderboard.
+Back when March Madness was happening, I participated in my class's NCAA basketball tournament bracket. I do play basketball, but I have zero knowledge of collegiate basketball teams and players. I did not want to create my bracket based on feeling, with zero strategy. Therefore, I did a little research on some ways I could use machine learning to help me create my picks. I stumbled upon random forests. They seemed simple and intuitive, and so I dove a little deeper into them, understanding the foundations of random forests. Furthermore, there were multiple Kaggle datasets containing relevant data from previous NCAA tournaments. Unfortunately, I did not have time to implement a working random forest to help with the bracket. I ended up making my picks from pure feeling and instinct. I placed low on the leaderboard.
 
 That was March 2026.
 
@@ -16,25 +16,25 @@ This [repository](https://github.com/jstephenhuang/2026-world-cup/blob/main/READ
 
 # Execution
 
-Before implementing this project, all I knew was that I wanted to use a random forest, I had a general idea of how random forests worked, and I had a kaggle dataset. My goal was to use previous match data to predict the games in the world cup and help me build my bracket.
+Before implementing this project, all I knew was that I wanted to use a random forest, I had a general idea of how random forests worked, and I had a Kaggle dataset. My goal was to use previous match data to predict the games in the World Cup and help me build my bracket.
 
-I asked Claude a few questions about this goal: what the project would look like, what I was missing, what would be added, what alternatives there were to random forests, is a random forest a good model to predict the world cup, and whether it was even possible. I will be honest, I skimmed through the responses and saw that it was possible and that random forests were actually a good method, so I typed, "build it".
+I asked Claude a few questions about this goal: what the project would look like, what I was missing, what would be added, what alternatives there were to random forests, whether a random forest was a good model for predicting the World Cup, and whether it was even possible. I will be honest: I skimmed through the responses and saw that it was possible and that random forests were actually a good method, so I typed, "build it."
 
-After Claude wrote a summary that it finished, I did not even bother to read it. I went straight to the README.md I had asked it to generate and followed the instructions. There I learned that I had to run Monte Carlo simulations (a step that I didn't even instruct it to do, because I simply didn't know what it was). I just wanted to make my bracket...
+After Claude wrote a summary indicating that it had finished, I did not even bother to read it. I went straight to the README.md I had asked it to generate and followed the instructions. There, I learned that I had to run Monte Carlo simulations (a step that I didn't even instruct it to do because I simply didn't know what it was). I just wanted to make my bracket...
 
-After understanding what was a Monte Carlo simulation and its purpose, I run 20,000 of them and got a final [csv](https://github.com/jstephenhuang/2026-world-cup/blob/main/predictions_2026.csv) with the each country and their probabilites of reaching each stage of the world cup. I made my bracket based on the [csv](https://github.com/jstephenhuang/2026-world-cup/blob/main/predictions_2026.csv) and submitted my bracket.
+After understanding what a Monte Carlo simulation was and its purpose, I ran 20,000 of them and got a final [CSV](https://github.com/jstephenhuang/2026-world-cup/blob/main/predictions_2026.csv) with each country and its probabilities of reaching each stage of the World Cup. I made my bracket based on the [CSV](https://github.com/jstephenhuang/2026-world-cup/blob/main/predictions_2026.csv) and submitted my bracket.
 
-If you notice there is only one commit that has the diffs for the source code and its because it really came entirely from that one prompt (with some follow up debugging prompts).
+If you notice that there is only one commit that has the diffs for the source code, it's because it really came entirely from that one prompt (with some follow-up debugging prompts).
 
 # Random Forests
 
-After making my bracket based on this table, I decided to acutally spend time understanding what was happening. I could not claim that I knew how to use random forests when I had zero of how it worked...
+After making my bracket based on this table, I decided to actually spend time understanding what was happening. I could not claim that I knew how to use random forests when I had zero idea of how they worked...
 
-I mentioned that I did some research on random forests. That consisted of watching a couple of videos on Youtube and briefly reading a few papers about random forest classifiers. From that quick research, I described a random forest in one sentence: a random forest aggregates the predictions of x decision trees, each trained a little differently, to estimate the probability of each possible outcome.
+I mentioned that I did some research on random forests. That consisted of watching a couple of videos on YouTube and briefly reading a few papers about random forest classifiers. From that quick research, I described a random forest in one sentence: a random forest aggregates the predictions of x decision trees, each trained a little differently, to estimate the probability of each possible outcome.
 
 That is the general idea, but I still had no idea how each individual decision tree was trained.
 
-After submitting my bracket, I asked gpt and claude over 1000 questions about random forest, to really understand the math and the intuitive idea of this machine learning model.
+After submitting my bracket, I asked GPT and Claude over 1,000 questions about random forests to really understand the math and the intuitive idea of this machine learning model.
 
 ## What is a random forest?
 
@@ -44,7 +44,7 @@ A **decision tree** is a tree-like structure that predicts an outcome by asking 
 
 ![alt text](/2026-wc/excalidraw-dt.png)
 
-When you group many of these trees together, they form a **forest**. Each tree is trained using a **random** sample of the dataset, making every tree slightly different from each other, much like in a real forest. Put the two ideas together, and you get a **random forest**.
+When you group many of these trees together, they form a **forest**. Each tree is trained using a **random** sample of the dataset, making the trees slightly different from one another, much like in a real forest. Put the two ideas together, and you get a **random forest**.
 
 Okay... but this still leaves some important questions about the decision tree itself:
 
@@ -58,9 +58,9 @@ Okay... but this still leaves some important questions about the decision tree i
 
 One thing I did not realize at the start was that a decision tree is a classification model. This seems obvious once you stop and think about it, but it genuinely had not occurred to me. In other words, decision trees have the same goal as other classification models, such as logistic regression, but they learn how to separate the classes in a different way. (Classifying data, I learned, is a common task in machine learning.)
 
-Suppose a binary classification where we are given a fruit that is either an apple or banana and we are tasked to determine if it is an apple or banana.
+Suppose we have a binary classification problem where we are given a fruit that is either an apple or a banana, and we are tasked with determining whether it is an apple or a banana.
 
-We first need to define (three for simplicity) the key features of a fruit such as the roundess, the color, and the sweetness.
+We first need to define the key features of a fruit (three for simplicity), such as roundness, color, and sweetness.
 
 A **logistic regression** model would have a weight vector $\mathbf{w}$ with three entries, one weight for each feature. Given a fruit, we extract its features into a vector $\mathbf{x}$ and calculate:
 
@@ -88,11 +88,11 @@ Each answer sends the fruit down a different branch until it reaches either appl
 
 Both models are trying to learn how to separate apples from bananas using known examples. The difference is how they create that separation. A linear model learns a weighted boundary, while a decision tree learns a sequence of questions.
 
-BUT HOW DOES THE TREE LEARN WHAT'S A GOOD SEQUENCE OF QUESTIONS, get to the point already Stephen! (this was not a quick digression)
+BUT HOW DOES THE TREE LEARN WHAT A GOOD SEQUENCE OF QUESTIONS IS? Get to the point already, Stephen! (This was not a quick digression.)
 
 ## How do we train a decision tree?
 
-Okay let me get back on track. How do train a decision tree using supervised learning on the historical data ([kaggle dataset](https://www.kaggle.com/datasets/martj42/international-football-results-from-1872-to-2017/data)).
+Okay, let me get back on track. How do we train a decision tree using supervised learning on the historical data ([Kaggle dataset](https://www.kaggle.com/datasets/martj42/international-football-results-from-1872-to-2017/data))?
 
 ### Feature engineering
 
@@ -101,13 +101,13 @@ First, we need to define the inputs and outputs of the decision tree, because it
 - The inputs determine which questions the tree can ask.
 - The outputs determine whether that question is useful.
 
-Thinking back to the original goal, using information available before the match (input), I want the model to classify its outcome as one of three possibilities: home win, draw or away win (output).
+Thinking back to the original goal, using information available before the match (input), I want the model to classify its outcome as one of three possibilities: home win, draw, or away win (output).
 
-But the input require a little more work because they depend on the data. As I mentioned in my **Quick digression**, we first need to extract useful features from the given dataset.
+But the inputs require a little more work because they depend on the data. As I mentioned in my **Quick digression**, we first need to extract useful features from the given dataset.
 
 Raw data is not always stored in a form that a model can use directly. We need to process it into values that describe the match and allow the tree to ask yes-or-no questions. I will refer to this process as **extracting features**, although **feature engineering** is probably the more accurate term. Thus, we need features that describe the strength and recent performance of both teams before the match begins.
 
-I did not choose these features myself. I asked Claude to examine the ([kaggle dataset](https://www.kaggle.com/datasets/martj42/international-football-results-from-1872-to-2017/data)) and determine which features could be useful. It suggested nine:
+I did not choose these features myself. I asked Claude to examine the [Kaggle dataset](https://www.kaggle.com/datasets/martj42/international-football-results-from-1872-to-2017/data) and determine which features could be useful. It suggested nine:
 
 1. `elo_diff`: the home team’s Elo rating minus the away team’s Elo rating
 2. `home_elo`: the home team’s Elo rating before the match
@@ -121,7 +121,7 @@ I did not choose these features myself. I asked Claude to examine the ([kaggle d
 
 Claude did not directly extract every value itself. It selected the features and generated the logic used to calculate them from the historical data.
 
-I won't get too much in detail how Claude calculated these features, they are pretty intuitive and simple. The most interesting one is the elo of a country. Using the [Elo Rating algorithm](https://www.geeksforgeeks.org/dsa/elo-rating-algorithm), we can replay the historical match in chronological order and extract an elo for a country.
+I won't go into too much detail about how Claude calculated these features; they are pretty intuitive and simple. The most interesting one is the Elo rating of a country. Using the [Elo Rating algorithm](https://www.geeksforgeeks.org/dsa/elo-rating-algorithm), we can replay the historical matches in chronological order and extract an Elo rating for a country.
 
 Once the features have been calculated, each historical match can be represented as:
 
@@ -234,9 +234,9 @@ $$
 
 Intuitively this makes sense:
 
-- If every match in a node has the same outcome, there is only one outcome which proportion is $1$. Thus, the Gini impurity is $0$, which means the node is completely pure.
+- If every match in a node has the same outcome, there is only one outcome whose proportion is $1$. Thus, the Gini impurity is $0$, which means the node is completely pure.
 
-- If the outcomes are mixed, no single proportion is $1$. Furthermore, as there are outcomes are more evenly mixed, the proportions get minimized and so the sum of the **squared** proportions becomes smaller. So the Gini impurity becomes larger.
+- If the outcomes are mixed, no single proportion is $1$. Furthermore, as the outcomes become more evenly mixed, the proportions get minimized, and so the sum of the **squared** proportions becomes smaller. So the Gini impurity becomes larger.
 
 I still have not gone deeply into the mathematics behind Gini impurity, but the goal makes sense. We want the tree to group similar historical outcomes together so that it has a better chance of classifying a new match that reaches the same group.
 
@@ -289,30 +289,30 @@ A random forest helps reduce this problem by averaging predictions from many dif
 
 To be clear, I did not manually implement any of this. **scikit-learn** abstracts the entire process through `DecisionTreeClassifier` and `RandomForestClassifier`. Once we provide the features and known outcomes, calling `fit()` makes **scikit-learn** generate the candidate questions, calculate their impurity, choose the best splits, build the trees, and apply the stopping rules for us. Understanding what happens behind `fit()` is useful, but the library handles the actual implementation.
 
-I have yet to (I will) dive into the actual scikit-learn source code to see how all of this is implemented. My explanation is based entirely on the scikit-learn documentation and explanations from GPT. (I will upload another journal entry sharing my discoveries)
+I have yet to (but I will) dive into the actual scikit-learn source code to see how all of this is implemented. My explanation is based entirely on the scikit-learn documentation and explanations from GPT. (I will upload another journal entry sharing my discoveries.)
 
 ## Not all trees are born the same in a random forest
 
-Great we now know how to train a tree. But one tree is proned to overfitting and will be too bloated trying to include all features resulting in inaccurate predictions.
+Great, we now know how to train a tree. But one tree is prone to overfitting and will be too bloated as it tries to include all features, resulting in inaccurate predictions.
 
-Therfore, rather than trusting just one tree, the random forest builds `x` slightly different decision trees.
+Therefore, rather than trusting just one tree, the random forest builds `x` slightly different decision trees.
 Each tree is trained on a random sample of the historical matches and considers a random subset of features at each node.
 Therefore, some trees might put more importance on certain features than other trees.
-For example, Tree 1 might strictly have nodes comparing the countries' elo ratings, but Tree 2 might instead look at their average goals.
-Furthermore, some tree might have slightly different input feature values than other trees.
-For example, Tree 1 might have a elo rating of 2111 for Spain, but Tree 2 have a elo rating of 2001.
+For example, Tree 1 might strictly have nodes comparing the countries' Elo ratings, but Tree 2 might instead look at their average goals.
+Furthermore, some trees might have slightly different input feature values from other trees.
+For example, Tree 1 might have an Elo rating of 2111 for Spain, but Tree 2 might have an Elo rating of 2001.
 
 This is all done for us and abstracted away from us by the `RandomForestClassifier` class from scikit-learn.
 
 Before predicting a match, the forest receives the same nine features extracted from the match.
-In a Spain vs. Brazil match, Tree 1 might predict a Spain win, but Tree 2 might predict a draw and maybe Tree 2 predicts Brazil to win.
-The random forest aggregates all of our `x` tree's prediction.
+In a Spain vs. Brazil match, Tree 1 might predict a Spain win, while Tree 2 might predict a draw, and maybe Tree 2 would predict Brazil to win.
+The random forest aggregates all of our `x` trees' predictions.
 
-As a result, we are left with a chart like result:
+As a result, we are left with a chart like this:
 
 ![alt text](/2026-wc/rf-chart-result.png)
 
-which we can convert to probabilities by dividing each count by the number of trees:
+We can convert these results to probabilities by dividing each count by the number of trees:
 
 ```json
 { "home win": 0.70333333333, "draw": 0.13, "away win": 0.16666666666 }
@@ -320,7 +320,7 @@ which we can convert to probabilities by dividing each count by the number of tr
 
 Look at that! Our random forest is able to predict the outcome of a match.
 
-Lastly, the repo adds a calibration step that will compare against the data one more time to see if the probability makes sense which is done by the `CalibratedClassifierCV` from scikit-learn. But this is the basic idea, the forest combines many slightly different opinions into probabilities for a match outcome.
+Lastly, the repo adds a calibration step that compares the results against the data one more time to see if the probabilities make sense. This is done by `CalibratedClassifierCV` from scikit-learn. But this is the basic idea: the forest combines many slightly different opinions into probabilities for a match outcome.
 
 # Monte Carlo Simulation
 
@@ -334,6 +334,6 @@ In the end, I was left with [predictions_2026.csv](https://github.com/jstephenhu
 
 # Conclusion
 
-This was a really fun project. It proved to me that it is possible to learn hard concepts on your own. I never took a class of machine learning. Even though it took a lot of time, as long as you stay curious and ask a lot of questions, you will evenutally understand it in the end.
+This was a really fun project. It proved to me that it is possible to learn hard concepts on your own. I never took a class in machine learning. Even though it took a lot of time, I eventually understood it by staying curious and asking a lot of questions.
 
-I definitely want to revisit this in the future such as trying to predict March Madness, but with an improved and more time invested strategy.
+I definitely want to revisit this in the future, such as by trying to predict March Madness, but with an improved strategy and more time invested.
