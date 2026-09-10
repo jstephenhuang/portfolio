@@ -1,7 +1,7 @@
 {
   "id": "yap",
   "title": "genai youtube automation",
-  "description": "Infrastructured a pipeline for automatically scraping reddit creepypastas, generating a script, narrating with TTS, generating images, fusing it together and uplodaing to youtube.",
+  "description": "An automated pipeline that scrapes reddit creepypastas, generates a scripts, generates a narration, generates images, assembles the final video, and uploads it to youtube.",
   "thumbnail": "/yap/thumb.png",
   "firstImage": "/yap/thumb.png",
   "width": 150,
