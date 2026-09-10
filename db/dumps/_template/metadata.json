@@ -2,13 +2,18 @@
   "id": "project-id",
   "title": "Project title",
   "description": "A short project description.",
-  "image": "/project/image.png",
+  "thumbnail": "/project/thumb.png",
+  "firstImage": "/project/first-image.png",
+  "hideThumbnailTitle": false,
   "width": 240,
   "defaultPosition": {
     "x": 0.5,
     "y": 0.5
   },
-  "galleries": ["projects"],
+  "interaction": {
+    "type": "link"
+  },
+  "galleries": ["home", "projects"],
   "links": {},
   "body": {
     "2026/01/02": [

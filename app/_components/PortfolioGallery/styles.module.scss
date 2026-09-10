@@ -37,6 +37,10 @@
   cursor: pointer;
   touch-action: none;
   user-select: none;
+
+  &:has([data-expanded="true"]) {
+    width: min(420px, calc(100vw - var(--spacing-city) - var(--spacing-city)));
+  }
 }
 
 .fixed .item {

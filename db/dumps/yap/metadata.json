@@ -1,16 +1,25 @@
 {
   "id": "yap",
-  "title": "youtube automation pipeline",
-  "description": "A pipeline for automating the repetitive parts of producing and publishing YouTube videos.",
-  "image": "/cake.gif",
+  "title": "genai youtube automation",
+  "description": "Infrastructured a pipeline for automatically scraping reddit creepypastas, generating a script, narrating with TTS, generating images, fusing it together and uplodaing to youtube.",
+  "thumbnail": "/yap/thumb.png",
+  "firstImage": "/yap/thumb.png",
   "width": 150,
   "defaultPosition": {
     "x": 0.74,
     "y": 0.28
   },
-  "galleries": ["projects"],
+  "galleries": ["home", "projects"],
   "links": {
-    "github": "https://github.com/jstephenhuang/yap"
+    "github": "https://github.com/jstephenhuang/yap",
+    "general": [
+      {
+        "label": "the channel",
+        "href": "https://www.youtube.com/@ADOXiDOCS/videos"
+      }
+    ]
   },
-  "body": {}
+  "body": {
+    "2026/09/03": [{ "type": "markdown", "src": "intro.md", "compact": false }]
+  }
 }

@@ -29,14 +29,28 @@ export const itemLinksSchema = z.object({
   general: z.array(generalLinkSchema).optional(),
 });
 
+export const itemInteractionSchema = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("link"),
+    href: z.string().min(1).optional(),
+  }),
+  z.object({
+    type: z.literal("expandable"),
+    defaultExpanded: z.boolean().optional(),
+  }),
+]);
+
 export const itemSchema = z.object({
   id: dumpIdSchema,
   title: z.string().min(1),
   description: z.string(),
-  image: z.string().min(1),
+  thumbnail: z.string().min(1),
+  firstImage: z.string().min(1),
+  hideThumbnailTitle: z.boolean().optional(),
   width: z.number().positive(),
   defaultPosition: positionSchema,
   links: itemLinksSchema,
+  interaction: itemInteractionSchema.default({ type: "link" }),
 });
 
 export const markdownBlockSchema = z.object({
@@ -87,6 +101,7 @@ export const dumpMetadataSchema = itemSchema.extend({
 });
 
 export type Position = z.infer<typeof positionSchema>;
+export type ItemInteraction = z.infer<typeof itemInteractionSchema>;
 export type Item = z.infer<typeof itemSchema>;
 export type GalleryId = z.infer<typeof galleryIdSchema>;
 export type DumpContentBlock = z.infer<typeof dumpContentBlockSchema>;

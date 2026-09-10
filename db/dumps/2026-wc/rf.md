@@ -22,7 +22,7 @@ I asked Claude a few questions about this goal: what the project would look like
 
 After Claude wrote a summary indicating that it had finished, I did not even bother to read it. I went straight to the README.md I had asked it to generate and followed the instructions. There, I learned that I had to run Monte Carlo simulations (a step that I didn't even instruct it to do because I simply didn't know what it was). I just wanted to make my bracket...
 
-After understanding what a Monte Carlo simulation was and its purpose, I ran 20,000 of them and got a final [CSV](https://github.com/jstephenhuang/2026-world-cup/blob/main/predictions_2026.csv) with each country and its probabilities of reaching each stage of the World Cup. I made my bracket based on the [CSV](https://github.com/jstephenhuang/2026-world-cup/blob/main/predictions_2026.csv) and submitted my bracket.
+After understanding what a Monte Carlo simulation was and its purpose, I ran 20,000 of them and got a final [csv](https://github.com/jstephenhuang/2026-world-cup/blob/main/predictions_2026.csv) with each country and its probabilities of reaching each stage of the World Cup. I made my bracket based on that csv and submitted my bracket.
 
 If you notice that there is only one commit that has the diffs for the source code, it's because it really came entirely from that one prompt (with some follow-up debugging prompts).
 
@@ -137,20 +137,16 @@ Now that each historical match has been turned into a set of features, the tree 
 For example, it could ask:
 
 1. Is `elo_diff` less than or equal to $-160$?
-
 2. Is `elo_diff` less than or equal to $-80$?
-
 3. Is `elo_diff` less than or equal to $70$?
-
 4. Is `home_form_gf` less than or equal to $1.5$?
 
 Each question splits the historical matches into two branches:
 
 1. `Yes`: matches that satisfy the question
-
 2. `No`: matches that do not
 
-The tree does not understand soccer well enough to decide that $70$ is a meaningful Elo difference. It simply tries many possible feature thresholds and checks which one best separates the known results.
+How do the tree know which question to pick?
 
 ### Scores the questions based on the split
 
@@ -158,17 +154,19 @@ A question is useful if it creates branches with outcomes that are less mixed. M
 
 For example, consider this question: **Is `elo_diff` less than or equal to 70?**
 
-Suppose that Germany is the team recorded as the home team and France is the away team. Using simplified Elo ratings:
+Suppose the match Germany vs France (2014) where Germany has an elo of 1000 and France has an elo of 1300:
 
 $$
 \texttt{elo\_diff} = 1000 - 1300 = -300
 $$
 
-Since $-300 \le 70$, this match enters the `Yes` branch. Germany won, so its known outcome is a home win.
+Since $-300 \le 70$, this match enters the `Yes` branch. In 2014, Germany won 0-1, so its known outcome is a home win.
 
 Here, **home win** only means that the team recorded as the home team won. It does not necessarily mean the match was played in that team’s country.
 
-Now consider Brazil against the Netherlands:
+_In our case, we consider the home team as the one listed first, the country on the left of the **vs**._
+
+Now consider Brazil (home team) against the Netherlands (away team) also in 2014:
 
 $$
 \texttt{elo\_diff} = 1200 - 1250 = -50
@@ -185,7 +183,7 @@ This branch is impure because two matches that answered the same question produc
 
 Of course, we cannot judge the entire question using only its `Yes` branch. We also need to look at the `No` branch and see how mixed its outcomes are.
 
-What is a mathematical way to achieve this?
+What is a mathematical way to see how pure a branch is?
 
 ### Measuring impurity with Gini impurity
 
@@ -252,21 +250,27 @@ G_{\text{split}}
 \frac{n_{\text{no}}}{n}G_{\text{no}}
 $$
 
-The weighting matters because a question should not look amazing just because it creates one tiny pure branch while leaving most matches in one large mixed branch.
+where $n$ is the total number of matches in the node before the split, $n_{\text{yes}}$ is the number of matches sent to the `Yes` branch, and $n_{\text{no}}$ is the number sent to the `No` branch.
+
+The weighting matters because a question should not look amazing just because it creates one tiny pure branch, the other branch might be insanely mixed.
 
 The tree then calculates the reduction in impurity:
 
 $$
 \text{reduction}
 =
-G_{\text{parent}}
+G_{\text{current node}}
 -
 G_{\text{split}}
 $$
 
 It chooses the question with the greatest reduction in impurity. This is the question that separates the historical outcomes most cleanly at the current node.
 
-After choosing the best question for the root node, the tree repeats the exact same process separately for the `Yes` and `No` branches. It keeps finding the best question available at each node until it reaches a stopping condition.
+For example, for the root node, we first calculate the impurity of all historical matches which would the impurity of the root. Then, for each candidate question, we split the matches into its `Yes` and `No` branches, calculate the impurity of each branch, and sum them into the weighted impurity, $G_{\text{split}}$. We subtract this value from the impurity of the root and repeat the process for every candidate question. The question with the largest reduction is chosen.
+
+Intuitively, this makes sense. If the current node is very mixed, its impurity score is large. A good question should separate those matches into branches that are less mixed, giving us a smaller $G_{\text{split}}$. The smaller $G_{\text{split}}$ is, the larger the reduction in impurity becomes.
+
+After choosing the best question for the root node, the tree repeats the exact same process separately for the `Yes` and `No` branches only using the matches that got split in that branch / in the current node (not all matches again). It keeps finding the best question available at each node until it reaches a stopping condition.
 
 The tree is greedy. It chooses the best question at the current node, but it does not test every possible complete tree before deciding.
 
@@ -285,9 +289,9 @@ Without these limits, a decision tree can become very deep and memorize the hist
 
 A random forest helps reduce this problem by averaging predictions from many different trees, rather than relying on one tree that may have learned the historical data a little too well.
 
-### Quick note
+### scikit-learn
 
-To be clear, I did not manually implement any of this. **scikit-learn** abstracts the entire process through `DecisionTreeClassifier` and `RandomForestClassifier`. Once we provide the features and known outcomes, calling `fit()` makes **scikit-learn** generate the candidate questions, calculate their impurity, choose the best splits, build the trees, and apply the stopping rules for us. Understanding what happens behind `fit()` is useful, but the library handles the actual implementation.
+**scikit-learn** abstracts the entire process through `DecisionTreeClassifier` and `RandomForestClassifier`. Once we provide the features and known outcomes, calling `fit()` makes **scikit-learn** generate the candidate questions, calculate their impurity, choose the best splits, build the trees, and apply the stopping rules for us. Understanding what happens behind `fit()` is useful, but the library handles the actual implementation.
 
 I have yet to (but I will) dive into the actual scikit-learn source code to see how all of this is implemented. My explanation is based entirely on the scikit-learn documentation and explanations from GPT. (I will upload another journal entry sharing my discoveries.)
 
@@ -332,8 +336,12 @@ From one simulation, we might predict Argentina to have won the final, but based
 Therefore, we simulate the World Cup more than once. In my case, I simulated 20,000 World Cups. We track, for each country, whether they advance, reach the Round of 16, the quarter-finals, the semi-finals, the final, or win the title.
 In the end, I was left with [predictions_2026.csv](https://github.com/jstephenhuang/2026-world-cup/blob/main/predictions_2026.csv).
 
+I discuss about the results in the [repo](https://github.com/jstephenhuang/2026-world-cup/blob/main/README.md)!
+
 # Conclusion
 
-This was a really fun project. It proved to me that it is possible to learn hard concepts on your own. I never took a class in machine learning. Even though it took a lot of time, I eventually understood it by staying curious and asking a lot of questions.
+This was a really fun project. I had over the top fulfillement seeing how I was able to forecast accurately the world cup games even though I had no knowledge of soccer. Not sure if this was fluke, it surely felt like a fluke since I didn't spend a lot time implementing it nor understand it at the time I created my bracket. This is something I definitely want to spend more time improving and prediction even more accurate outcomes.
 
-I definitely want to revisit this in the future, such as by trying to predict March Madness, but with an improved strategy and more time invested.
+It also proved to me that it is possible to learn hard concepts on your own as long as you don't give up and stay curious. I never took a class in machine learning and even though it took a lot of time, I eventually understood it by staying curious and asking a lot of questions.
+
+I definitely want to revisit this in the future, such as by trying to predict March Madness next, but with an improved strategy and more time invested.

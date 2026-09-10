@@ -1,14 +1,15 @@
 {
   "id": "crafting-interpreters",
   "title": "building an interpreter",
-  "description": "An interpreter built while exploring language design, parsing, and runtime implementation.",
-  "image": "/lox.jpg",
+  "description": "Following Robert Nystrom's book Crafting Interpreters but instead of using Java, I'm using C++ and sharing my thoughts along the way.",
+  "thumbnail": "/crafting-interpreters/yak.png",
+  "firstImage": "/crafting-interpreters/yak.png",
   "width": 150,
   "defaultPosition": {
     "x": 0.42,
     "y": 0.72
   },
-  "galleries": ["projects"],
+  "galleries": ["home", "projects"],
   "links": {
     "github": "https://github.com/jstephenhuang/language-translators/tree/main/lox",
     "general": [
@@ -18,5 +19,7 @@
       }
     ]
   },
-  "body": {}
+  "body": {
+    "2026/08/28": [{ "type": "markdown", "src": "intro.md", "compact": false }]
+  }
 }

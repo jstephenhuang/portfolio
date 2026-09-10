@@ -8,7 +8,7 @@ import type { Item } from "@/lib/data";
 import { useArrangedItems } from "@/lib/hooks";
 
 import { useSettings } from "../contexts/SettingsContext";
-import PortfolioCard from "../PortfolioCard";
+import GalleryItem from "../GalleryItem";
 import styles from "./styles.module.scss";
 
 interface PortfolioGalleryProps {
@@ -54,7 +54,7 @@ const Root: React.FC<React.PropsWithChildren<PortfolioGalleryProps>> = ({ childr
               }}
               onSettle={({ x, y }) => savePosition(item.id, x, y)}
             >
-              <PortfolioCard item={item} />
+              <GalleryItem item={item} />
             </AirHockey.Item>
           ))}
       </AirHockey.Root>

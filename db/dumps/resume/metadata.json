@@ -1,0 +1,19 @@
+{
+  "id": "resume",
+  "title": "resume.pdf",
+  "description": "My resume.",
+  "thumbnail": "/resume/icon.png",
+  "firstImage": "/resume/icon.png",
+  "width": 150,
+  "defaultPosition": {
+    "x": 0.76,
+    "y": 0.7
+  },
+  "interaction": {
+    "type": "link",
+    "href": "/resume/resume.pdf"
+  },
+  "galleries": ["home"],
+  "links": {},
+  "body": {}
+}

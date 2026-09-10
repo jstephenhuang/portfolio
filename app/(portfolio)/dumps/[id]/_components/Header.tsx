@@ -13,7 +13,7 @@ const Header: React.FC<HeaderProps> = ({ item }) => {
   return (
     <header className={styles.header}>
       <div className={styles.imageWrapper}>
-        <Image className={styles.image} src={item.image} alt={item.title} priority />
+        <Image className={styles.image} src={item.firstImage} alt={item.title} priority />
       </div>
       <div className={styles.content}>
         <h1 className={styles.title}>{item.title}</h1>

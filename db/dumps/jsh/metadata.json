@@ -1,0 +1,21 @@
+{
+  "id": "jsh",
+  "title": "jsh",
+  "description": "haalo, my name is Stephen. This is where I share the software/hardward I build, the problems I explore, and some of the uncandid thoughts I have along the way. Drag and throw the cards around, or click and open one to see the work behind it.",
+  "thumbnail": "/jsh/torch.gif",
+  "firstImage": "/jsh/torch.gif",
+  "width": 150,
+  "defaultPosition": {
+    "x": 0.42,
+    "y": 0.38
+  },
+  "interaction": {
+    "type": "expandable",
+    "defaultExpanded": true
+  },
+  "galleries": ["home"],
+  "links": {
+    "github": "https://github.com/jstephenhuang"
+  },
+  "body": {}
+}

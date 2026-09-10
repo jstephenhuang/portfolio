@@ -1,25 +1,30 @@
 "use client";
 
+import { useMounted } from "@mantine/hooks";
 import { EnvelopeClosedIcon, GitHubLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
+import cx from "classnames";
 import { AnimatePresence, motion } from "motion/react";
 import { usePathname } from "next/navigation";
-import { Button, Link } from "@/components/ui";
-
-import { useMounted } from "@mantine/hooks";
 import { useTheme } from "next-themes";
 import { useEffect, useRef } from "react";
-import { useSettings } from "../contexts/SettingsContext";
 
-import cx from "classnames";
+import { Button, Link } from "@/components/ui";
+import { features } from "@/lib/features";
+
 import styles from "./styles.module.scss";
+import { useSettings } from "../contexts/SettingsContext";
 
 const THEME_TRANSITION_DURATION = 240;
 
 const navigationItems = [
   { label: "jsh", href: "/" },
-  { label: "work", href: "/work" },
-  { label: "projects", href: "/projects" },
-  { label: "journal", href: "/journal" },
+  ...(features.galleryPages
+    ? [
+        { label: "work", href: "/work" },
+        { label: "projects", href: "/projects" },
+        { label: "journal", href: "/journal" },
+      ]
+    : []),
 ] as const;
 
 const getNextPhysicsValue = (value: number, direction: 1 | -1 = 1) => {

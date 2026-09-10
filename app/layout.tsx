@@ -23,6 +23,9 @@ const jetBrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "jsh",
   description: "jsh | portfolio",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 const RootLayout: React.FC<Readonly<React.PropsWithChildren>> = ({ children }) => {

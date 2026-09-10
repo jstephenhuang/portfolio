@@ -14,9 +14,38 @@ Use a comma-separated gallery list when a dump belongs in multiple galleries:
 pnpm create:dump my-project home,projects
 ```
 
-The command creates the dump directory, validated metadata, and `note1.md`. The first body entry uses the current local date. Replace the generated description, image, dimensions, and content before publishing.
+The command creates the dump directory, validated metadata, and `note1.md`. The first body entry uses the current local date. Replace the generated description, images, dimensions, and content before publishing.
 
 Valid galleries are `home`, `work`, `projects`, and `journal`. Gallery membership lives in each dump's `galleries` field, so no separate import or gallery registry needs updating.
+
+## Cover images
+
+Each dump has two independent cover images:
+
+```json
+{
+  "thumbnail": "/my-project/thumb.png",
+  "firstImage": "/my-project/first-image.png",
+  "hideThumbnailTitle": false
+}
+```
+
+- `thumbnail`: The gallery card image. It is always displayed in a square frame, so use `thumb.png` or `thumb.gif` and keep important content away from the edges.
+- `firstImage`: The uncropped image shown first at the top of the dump page.
+- `hideThumbnailTitle`: Optional. Set it to `true` to hide the title displayed below the gallery thumbnail. The title still appears on the dump page and in expanded cards.
+
+Place both files in `public/<dump-id>/`. They may temporarily point to the same asset, but keeping separate fields lets the card and page use different crops or formats.
+
+Linked items open `/dumps/<id>` by default. Set `interaction.href` when a card should link directly to another local file or URL:
+
+```json
+{
+  "interaction": {
+    "type": "link",
+    "href": "/resume/resume.pdf"
+  }
+}
+```
 
 ## Markdown
 
