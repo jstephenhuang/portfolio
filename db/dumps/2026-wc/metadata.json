@@ -8,7 +8,7 @@
     "x": 0.12,
     "y": 0.18
   },
-  "galleries": ["projects"],
+  "galleries": ["home", "projects"],
   "links": {
     "github": "https://github.com/jstephenhuang/2026-world-cup"
   },

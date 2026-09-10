@@ -105,7 +105,10 @@
 .markdownStats {
   margin: 0;
   color: var(--color-text-secondary);
-  line-height: var(--line-height-normal);
+}
+
+.markdownSectionRail {
+  display: none;
 }
 
 .media {
@@ -160,5 +163,97 @@
   .header {
     grid-template-columns: 1fr;
     gap: var(--spacing-state);
+  }
+}
+
+@media (min-width: 1280px) {
+  .markdownSectionRail {
+    position: fixed;
+    z-index: 1;
+    top: 50%;
+    left: max(var(--spacing-city), calc((100vw - 1000px) / 2 - 64px));
+    display: block;
+    transform: translateY(-50%);
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    li {
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  .markdownSectionLink {
+    position: relative;
+    display: flex;
+    width: 28px;
+    height: 8px;
+    align-items: center;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible,
+    &.active {
+      .markdownSectionLine {
+        width: 24px;
+        background: var(--color-text-primary);
+      }
+    }
+
+    &:hover,
+    &:focus-visible {
+      .markdownSectionTitle {
+        opacity: 1;
+        transform: translate(0, -50%);
+      }
+    }
+
+    &:focus-visible {
+      border-radius: var(--border-radius-xxs);
+      outline: 2px solid var(--color-accent);
+      outline-offset: var(--spacing-room);
+    }
+  }
+
+  .markdownSectionLine {
+    display: block;
+    width: 14px;
+    height: 1px;
+    background: var(--color-text-secondary);
+    transition:
+      width 140ms ease,
+      background-color 140ms ease;
+  }
+
+  .markdownSectionTitle {
+    position: absolute;
+    top: 50%;
+    left: calc(100% + var(--spacing-house));
+    overflow: hidden;
+    max-width: 280px;
+    padding: var(--spacing-room) var(--spacing-house);
+    border: var(--color-border-width) solid var(--color-border-secondary);
+    border-radius: var(--border-radius-xxs);
+    color: var(--color-text-primary);
+    background: var(--color-bg-primary);
+    box-shadow: var(--box-shadow);
+    font-size: var(--font-size-fluid-sm);
+    line-height: var(--line-height-normal);
+    opacity: 0;
+    pointer-events: none;
+    text-overflow: ellipsis;
+    transform: translate(-4px, -50%);
+    transition:
+      opacity 140ms ease,
+      transform 140ms ease;
+    white-space: nowrap;
   }
 }

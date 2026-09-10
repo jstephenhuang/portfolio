@@ -10,7 +10,7 @@ const Root: React.FC = async () => {
   return (
     <Gallery.Root items={itemsResult.data} storageKey="root-items">
       <Gallery.Description>
-        <p>Studying Computer Engineer at University of Waterloo</p>
+        <p>Drag and throw items around.</p>
       </Gallery.Description>
     </Gallery.Root>
   );
