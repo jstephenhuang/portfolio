@@ -1,9 +1,9 @@
 {
   "id": "2026-wc",
   "title": "2026 world cup",
-  "description": "A calibrated random forest trained on historical international matches (Kaggle set) and used to simulate 20,000 2026 World Cups helping me win a bracket challenge with a prize of 400$.",
-  "image": "/random-forest.png",
-  "width": 500,
+  "description": "I trained a random forest on historical international matches to predict match outcomes, then ran 20,000 Monte Carlo simulations of the 2026 World Cup to build the bracket that helped me win a bracket challenge with a prize of $400.",
+  "image": "/2026-wc/logo.gif",
+  "width": 150,
   "defaultPosition": {
     "x": 0.12,
     "y": 0.18

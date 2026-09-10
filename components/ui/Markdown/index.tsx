@@ -8,7 +8,6 @@ import remarkMath from "remark-math";
 import { Image } from "../Image";
 import { Link } from "../Link";
 import { MarkdownCodeBlock } from "../MarkdownCodeBlock";
-
 import styles from "./styles.module.scss";
 
 type MarkdownImageProps = React.ComponentProps<"img"> & ExtraProps;

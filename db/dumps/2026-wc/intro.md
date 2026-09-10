@@ -1,91 +1,201 @@
-# Introduction
+# Brief Prelude
 
-A more complete context of this project can be found under the [README.md](https://github.com/jstephenhuang/2026-world-cup/blob/main/README.md) of this repo (all written in my words).
+Everything below is written in my own words and represents my current understanding of **random forests**. Some of it could be wrong, as my machine learning knowledge is still pretty limited and I have not spent too much time studying the fundamental concepts. Also, expect plenty of grammar and syntax mistakes :)
 
-This project predicts each 2026 World Cup team's chance to advance from the group stage, reach each knockout round, and win the title. A calibrated random forest estimates each match from nine features, including Elo ratings, venue, tournament context, and recent form. I then ran 20,000 tournament simulations to turn match probabilities into tournament probabilities.
+_I did use ChatGPT to employ better words and suggest more coherent ways to write my sentences._
 
-## Implementation
+# Context
 
-All I had before implementing this project, was I knew wanted to use Random Forest, how Random Forest generally worked, and I had a Kaggle set.
+Back when March Madness was happening, I participated in my class's NCAA basketball tournament bracket. I do play basketball, but I have zero knowledge of collegiate basketball teams and players. I did not want to create my bracket based on feeling, with zero strategy. Therefore, I did a little research on some ways I could use machine learning to help me create my picks. I stumbled upon random forests. It seemed simple and intuitive, and so I dove a little deeper into it, understanding the foundations of random forests. Furthermore, there were multiple Kaggle datasets containing relevant data from previous NCAA tournaments. Unfortunately, I did not have time to implement a working random forest to help with the bracket. I ended up making my picks from pure feeling and instinct. I placed low on the leaderboard.
 
-The goal was to use a Random Forest to help me predict the games for the world cup based on previous data which would help me build a bracket.
+That was March 2026.
 
-I asked Claude some questions on this goal: how would it look like, what am I missing, what are alternatives to using a Random Forest, if it was even possible.
+With the 2026 FIFA World Cup this summer, I had another chance at implementing my random forest. Coding agents have gotten so good that I could even ask them to refine and strengthen my predictions.
 
-I read the few first sentences saying yes and that Random Forests was actually a good method. So I typed "let's go".
+This [repository](https://github.com/jstephenhuang/2026-world-cup/blob/main/README.md) attempts to predict how likely each country in the 2026 World Cup is to advance, reach the R16, reach the quarter-finals, reach the semi-finals, reach the final, and win the title.
 
-And I will be honest, after Claude wrote a summary, I didn't even bother to read it. I went straight to reading the README.md I told it to generate for me and ran the Monte Carlo simulations. I just wanted to make my bracket...
+# Execution
 
-There was a couple of questions I had for Claude for the results and what they meant and how it was aggregated.
+Before implementing this project, all I knew was that I wanted to use a random forest, I had a general idea of how random forests worked, and I had a kaggle dataset. My goal was to use previous match data to predict the games in the world cup and help me build my bracket.
 
-But the source code that you see im the repo is pretty much from this one shotted prompt.
+I asked Claude a few questions about this goal: what the project would look like, what I was missing, what would be added, what alternatives there were to random forests, is a random forest a good model to predict the world cup, and whether it was even possible. I will be honest, I skimmed through the responses and saw that it was possible and that random forests were actually a good method, so I typed, "build it".
 
-## Conclusion
+After Claude wrote a summary that it finished, I did not even bother to read it. I went straight to the README.md I had asked it to generate and followed the instructions. There I learned that I had to run Monte Carlo simulations (a step that I didn't even instruct it to do, because I simply didn't know what it was). I just wanted to make my bracket...
 
-After making my bracket based on this table, I decided to acutally spend time understanding what was happening.
+After understanding what was a Monte Carlo simulation and its purpose, I run 20,000 of them and got a final [csv](https://github.com/jstephenhuang/2026-world-cup/blob/main/predictions_2026.csv) with the each country and their probabilites of reaching each stage of the world cup. I made my bracket based on the [csv](https://github.com/jstephenhuang/2026-world-cup/blob/main/predictions_2026.csv) and submitted my bracket.
 
-I asked Claude more than a 1000 questions. In fact, the links and blobs of paragraphs that it gave me help me write this readme. My biggest confusion is how you train a Random Forest with data. More specifically how does the individual trees create the nodes, and how does it know how to stop creating nodes (stop asking yes-or-no questions).
+If you notice there is only one commit that has the diffs for the source code and its because it really came entirely from that one prompt (with some follow up debugging prompts).
 
-Explained in the [README.md](https://github.com/jstephenhuang/2026-world-cup/blob/main/README.md), we first process the raw dataset and extract as many relevant features (elo, recent_goals, etc...).
+# Random Forests
 
-Now how do we use the extracted feature to train our trees?
+After making my bracket based on this table, I decided to acutally spend time understanding what was happening. I could not claim that I knew how to use random forests when I had zero of how it worked...
 
-scikit-learn abstracts this away from us, but it essentially:
+I mentioned that I did some research on random forests. That consisted of watching a couple of videos on Youtube and briefly reading a few papers about random forest classifiers. From that quick research, I described a random forest in one sentence: a random forest aggregates the predictions of x decision trees, each trained a little differently, to estimate the probability of each possible outcome.
 
-### 1. Considers many possible questions
+That is the general idea, but I still had no idea how each individual decision tree was trained.
 
-At each node, the tree generates possible questions (nodes) using the extracted features, say we are starting a root node:
+After submitting my bracket, I asked gpt and claude over 1000 questions about random forest, to really understand the math and the intuitive idea of this machine learning model.
 
-- Is `elo_diff <= -160`?
-- Is `elo_diff <= -80`?
-- Is `elo_diff <= 70`?
-- Is `recent_goals <= 1.5`?
+## What is a random forest?
 
-These candidate questions split the historical matches into two branches.
+To understand a random forest, it is important to understand its fundamental component: a decision tree. A decision tree starts with a root node (a root question). Given the inputs, each answer takes the tree farther down until it reaches a leaf node (a possible output).
 
-### 2. Scores the questions based on the split
+A **decision tree** is a tree-like structure that predicts an outcome by asking a sequence of yes-or-no questions at its nodes.
 
-How do score a question? By checking if the outcome from the division is mixed or not.
+![alt text](/2026-wc/excalidraw-dt.png)
 
-For example, take the question: `Is elo_diff <= 70?`.
+When you group many of these trees together, they form a **forest**. Each tree is trained using a **random** sample of the dataset, making every tree slightly different from each other, much like in a real forest. Put the two ideas together, and you get a **random forest**.
 
-Consider Germany (elo: 1000) vs France (elo: 1300) in 2014. Germany's elo difference would be:
+Okay... but this still leaves some important questions about the decision tree itself:
 
-```text
-elo_diff = 1000 - 1300 = -300
-```
+- How does the decision tree know how to ask the right question?
+- How does the decision tree know when to stop?
+- How does the decision tree use the historical data?
+- What is a good vs a bad decision tree?
+- When would we choose a random forest over a decision tree?
 
-For the question , this match would enter the `Yes` branch because `-300 <= 70`. Germany won, so the known outcome would be classified as a home win.
+## Quick digression
 
-_Note that home / away is just used to classified which team won. So home win in the case above means Germany won, France lost._
+One thing I did not realize at the start was that a decision tree is a classification model. This seems obvious once you stop and think about it, but it genuinely had not occurred to me. In other words, decision trees have the same goal as other classification models, such as logistic regression, but they learn how to separate the classes in a different way. (Classifying data, I learned, is a common task in machine learning.)
 
-Now consider Brazil (elo: 1200) vs Netherlands (elo: 1250) in 2014:
+Suppose a binary classification where we are given a fruit that is either an apple or banana and we are tasked to determine if it is an apple or banana.
 
-```text
-elo_diff = 1200 - 1250 = -50
-```
+We first need to define (three for simplicity) the key features of a fruit such as the roundess, the color, and the sweetness.
 
-This match would also enter the `Yes` branch because `-50 <= 70`. However, the Netherlands won, so the known outcome would be classified as away win (Brazil lost, Netherlands won).
-
-The branch now contains:
-
-```text
-yes:
-Germany vs. France     -> home win
-Brazil vs. Netherlands -> away win
-```
-
-This branch is impure because matches that satisfied the same question (both Yes) produced different outcomes.
-
-There are different equations for measuring impurity. One of them is Gini impurity, which I still have yet to fully understand. But briefly,
-
-The Gini impurity is:
+A **logistic regression** model would have a weight vector $\mathbf{w}$ with three entries, one weight for each feature. Given a fruit, we extract its features into a vector $\mathbf{x}$ and calculate:
 
 $$
-G = \sum_{k} p_{k}(1-p_{k})
+z = \mathbf{w}^{T}\mathbf{x} + b
 $$
 
-where $p_k$ is the proportion of matches belonging to outcome $k$. Source: https://scikit-learn.org/stable/modules/tree.html#tree-mathematical-formulation
+We then pass the result through the sigmoid function:
+
+$$
+p = \frac{1}{1 + e^{-z}}
+$$
+
+This converts the result into a value between $0$ and $1$. If we define $0$ as apple and $1$ as banana, a value greater than or equal to $0.5$ would predict banana, while a value below $0.5$ would predict apple.
+
+I do not fully understand how the weights are trained yet, but from what I understand, it is somewhat similar to how a neural network corrects its weights. Logistic regression has a loss function, and we use gradient descent to adjust the weights using $\alpha$ as the learning rate (maybe a topic for later).
+
+A **decision tree** would instead separate the fruits by asking a sequence of yes-or-no questions:
+
+- Is the fruit round?
+- Is the fruit red?
+- Is the fruit longer than 15 centimetres?
+
+Each answer sends the fruit down a different branch until it reaches either apple or banana.
+
+Both models are trying to learn how to separate apples from bananas using known examples. The difference is how they create that separation. A linear model learns a weighted boundary, while a decision tree learns a sequence of questions.
+
+BUT HOW DOES THE TREE LEARN WHAT'S A GOOD SEQUENCE OF QUESTIONS, get to the point already Stephen! (this was not a quick digression)
+
+## How do we train a decision tree?
+
+Okay let me get back on track. How do train a decision tree using supervised learning on the historical data ([kaggle dataset](https://www.kaggle.com/datasets/martj42/international-football-results-from-1872-to-2017/data)).
+
+### Feature engineering
+
+First, we need to define the inputs and outputs of the decision tree, because it depends heavily on the relationship between the input features and the known outputs in the training data.
+
+- The inputs determine which questions the tree can ask.
+- The outputs determine whether that question is useful.
+
+Thinking back to the original goal, using information available before the match (input), I want the model to classify its outcome as one of three possibilities: home win, draw or away win (output).
+
+But the input require a little more work because they depend on the data. As I mentioned in my **Quick digression**, we first need to extract useful features from the given dataset.
+
+Raw data is not always stored in a form that a model can use directly. We need to process it into values that describe the match and allow the tree to ask yes-or-no questions. I will refer to this process as **extracting features**, although **feature engineering** is probably the more accurate term. Thus, we need features that describe the strength and recent performance of both teams before the match begins.
+
+I did not choose these features myself. I asked Claude to examine the ([kaggle dataset](https://www.kaggle.com/datasets/martj42/international-football-results-from-1872-to-2017/data)) and determine which features could be useful. It suggested nine:
+
+1. `elo_diff`: the home team’s Elo rating minus the away team’s Elo rating
+2. `home_elo`: the home team’s Elo rating before the match
+3. `away_elo`: the away team’s Elo rating before the match
+4. `neutral`: `1` if the match was played at a neutral venue, otherwise `0`
+5. `is_tournament`: `1` if the match was not a friendly, otherwise `0`
+6. `home_form_gf`: the home team’s average goals scored over its previous five matches
+7. `home_form_ga`: the home team’s average goals conceded over its previous five matches
+8. `away_form_gf`: the away team’s average goals scored over its previous five matches
+9. `away_form_ga`: the away team’s average goals conceded over its previous five matches
+
+Claude did not directly extract every value itself. It selected the features and generated the logic used to calculate them from the historical data.
+
+I won't get too much in detail how Claude calculated these features, they are pretty intuitive and simple. The most interesting one is the elo of a country. Using the [Elo Rating algorithm](https://www.geeksforgeeks.org/dsa/elo-rating-algorithm), we can replay the historical match in chronological order and extract an elo for a country.
+
+Once the features have been calculated, each historical match can be represented as:
+
+- inputs: the nine features before the match
+- output: home win, draw, or away win
+
+One important limitation is that during each simulated World Cup, the model keeps every team’s Elo rating and recent form fixed. The ratings and form values do not change after simulated matches. Updating them throughout the tournament is one possible improvement I could make in the future.
+
+### Considers many possible questions
+
+Now that each historical match has been turned into a set of features, the tree can start learning. At the root node, it begins with every match in the training data and considers many possible questions.
+
+For example, it could ask:
+
+1. Is `elo_diff` less than or equal to $-160$?
+
+2. Is `elo_diff` less than or equal to $-80$?
+
+3. Is `elo_diff` less than or equal to $70$?
+
+4. Is `home_form_gf` less than or equal to $1.5$?
+
+Each question splits the historical matches into two branches:
+
+1. `Yes`: matches that satisfy the question
+
+2. `No`: matches that do not
+
+The tree does not understand soccer well enough to decide that $70$ is a meaningful Elo difference. It simply tries many possible feature thresholds and checks which one best separates the known results.
+
+### Scores the questions based on the split
+
+A question is useful if it creates branches with outcomes that are less mixed. More specifically, it is the branches that are pure or impure, not the question itself.
+
+For example, consider this question: **Is `elo_diff` less than or equal to 70?**
+
+Suppose that Germany is the team recorded as the home team and France is the away team. Using simplified Elo ratings:
+
+$$
+\texttt{elo\_diff} = 1000 - 1300 = -300
+$$
+
+Since $-300 \le 70$, this match enters the `Yes` branch. Germany won, so its known outcome is a home win.
+
+Here, **home win** only means that the team recorded as the home team won. It does not necessarily mean the match was played in that team’s country.
+
+Now consider Brazil against the Netherlands:
+
+$$
+\texttt{elo\_diff} = 1200 - 1250 = -50
+$$
+
+This match also enters the `Yes` branch because $-50 \le 70$. However, the Netherlands won, so this match is labelled as an away win.
+
+The `Yes` branch now contains:
+
+- Germany vs France: home win
+- Brazil vs Netherlands: away win
+
+This branch is impure because two matches that answered the same question produced different outcomes. A pure branch would contain only home wins, only draws, or only away wins.
+
+Of course, we cannot judge the entire question using only its `Yes` branch. We also need to look at the `No` branch and see how mixed its outcomes are.
+
+What is a mathematical way to achieve this?
+
+### Measuring impurity with Gini impurity
+
+There are different ways to measure how mixed a node is. One of them is **Gini impurity**, which is used by default in scikit-learn’s decision tree classifiers.
+
+$$
+G = \sum_k p_k(1-p_k)
+$$
+
+Here, $p_k$ is the proportion of matches in the node that belong to outcome $k$. You can find the formal definition in the [scikit-learn documentation](https://scikit-learn.org/stable/modules/tree.html#tree-mathematical-formulation).
 
 Suppose a node contains:
 
@@ -93,17 +203,25 @@ Suppose a node contains:
 - 3 draws
 - 2 away wins
 
-Substituting each outcome's proportion into the formula:
+The Gini impurity is:
 
 $$
+\begin{aligned}
 G
-= \left(\frac{5}{10}\right)\left(1-\frac{5}{10}\right)
-+ \left(\frac{3}{10}\right)\left(1-\frac{3}{10}\right)
-+ \left(\frac{2}{10}\right)\left(1-\frac{2}{10}\right)
-= 0.62
+&=
+\left(\frac{5}{10}\right)
+\left(1 - \frac{5}{10}\right)
++
+\left(\frac{3}{10}\right)
+\left(1 - \frac{3}{10}\right)
++
+\left(\frac{2}{10}\right)
+\left(1 - \frac{2}{10}\right) \\
+&= 0.62
+\end{aligned}
 $$
 
-This formula can also be rewritten because the proportions of all outcomes add up to $1$:
+The formula can also be written as:
 
 $$
 \begin{aligned}
@@ -114,33 +232,108 @@ G
 \end{aligned}
 $$
 
-Using that equivalent form:
+Intuitively this makes sense:
+
+- If every match in a node has the same outcome, there is only one outcome which proportion is $1$. Thus, the Gini impurity is $0$, which means the node is completely pure.
+
+- If the outcomes are mixed, no single proportion is $1$. Furthermore, as there are outcomes are more evenly mixed, the proportions get minimized and so the sum of the **squared** proportions becomes smaller. So the Gini impurity becomes larger.
+
+I still have not gone deeply into the mathematics behind Gini impurity, but the goal makes sense. We want the tree to group similar historical outcomes together so that it has a better chance of classifying a new match that reaches the same group.
+
+### Chooses the best question and recursively builds the tree
+
+For every candidate question, the tree calculates the weighted impurity of both branches:
 
 $$
-G
-= 1
-- \left(\frac{5}{10}\right)^2
-- \left(\frac{3}{10}\right)^2
-- \left(\frac{2}{10}\right)^2
-= 0.62
+G_{\text{split}}
+=
+\frac{n_{\text{yes}}}{n}G_{\text{yes}}
++
+\frac{n_{\text{no}}}{n}G_{\text{no}}
 $$
 
-You can see if we only had one outcome, the score will be 0 (pure). But if we had multiple or a mixed of outcomes, the proportions are not only small but the squared makes them even smaller resulting in a larger score (impure).
+The weighting matters because a question should not look amazing just because it creates one tiny pure branch while leaving most matches in one large mixed branch.
 
-### 3. Recursively builds the tree
+The tree then calculates the reduction in impurity:
 
-After each candidate has a score, we pick the question that resulted in the greates **reduction** impurity score.
+$$
+\text{reduction}
+=
+G_{\text{parent}}
+-
+G_{\text{split}}
+$$
 
-What does reduction here mean? I also had a hard time understanding, but essentially, we take the current impurity score of the node (the parent impurity), and substract the impurity of their children nodes.
+It chooses the question with the greatest reduction in impurity. This is the question that separates the historical outcomes most cleanly at the current node.
 
-What are the base conditions?
+After choosing the best question for the root node, the tree repeats the exact same process separately for the `Yes` and `No` branches. It keeps finding the best question available at each node until it reaches a stopping condition.
 
-Splitting stops when:
+The tree is greedy. It chooses the best question at the current node, but it does not test every possible complete tree before deciding.
 
-- A group contains only one outcome (all leaf nodes are the same outcome)
-  - Deep decision trees often produce pure leaves, which is one reason an individual tree can overfit. A random forest reduces this problem by averaging predictions from many different trees.
-- The configured maximum depth has been reached.
-- The node does not contain enough matches to split, according to `min_samples_split`.
-- A candidate split would create a branch with fewer matches than `min_samples_leaf`.
-- No candidate question produces a sufficient reduction in impurity.
-- The configured maximum number of leaf nodes has been reached.
+### When does the tree stop?
+
+The tree stops splitting a node when one of these conditions is met:
+
+1. Every match that reaches the node has the same outcome.
+2. The configured maximum depth, `max_depth`, has been reached.
+3. The node does not contain enough matches to split, according to `min_samples_split`.
+4. A candidate question would create a branch with fewer matches than `min_samples_leaf`.
+5. No candidate question produces a sufficient reduction in impurity above `min_impurity_decrease`.
+6. The configured maximum number of leaf nodes has been reached.
+
+Without these limits, a decision tree can become very deep and memorize the historical matches. It may then look extremely accurate on its training data but perform poorly on future matches. This is called overfitting.
+
+A random forest helps reduce this problem by averaging predictions from many different trees, rather than relying on one tree that may have learned the historical data a little too well.
+
+### Quick note
+
+To be clear, I did not manually implement any of this. **scikit-learn** abstracts the entire process through `DecisionTreeClassifier` and `RandomForestClassifier`. Once we provide the features and known outcomes, calling `fit()` makes **scikit-learn** generate the candidate questions, calculate their impurity, choose the best splits, build the trees, and apply the stopping rules for us. Understanding what happens behind `fit()` is useful, but the library handles the actual implementation.
+
+I have yet to (I will) dive into the actual scikit-learn source code to see how all of this is implemented. My explanation is based entirely on the scikit-learn documentation and explanations from GPT. (I will upload another journal entry sharing my discoveries)
+
+## Not all trees are born the same in a random forest
+
+Great we now know how to train a tree. But one tree is proned to overfitting and will be too bloated trying to include all features resulting in inaccurate predictions.
+
+Therfore, rather than trusting just one tree, the random forest builds `x` slightly different decision trees.
+Each tree is trained on a random sample of the historical matches and considers a random subset of features at each node.
+Therefore, some trees might put more importance on certain features than other trees.
+For example, Tree 1 might strictly have nodes comparing the countries' elo ratings, but Tree 2 might instead look at their average goals.
+Furthermore, some tree might have slightly different input feature values than other trees.
+For example, Tree 1 might have a elo rating of 2111 for Spain, but Tree 2 have a elo rating of 2001.
+
+This is all done for us and abstracted away from us by the `RandomForestClassifier` class from scikit-learn.
+
+Before predicting a match, the forest receives the same nine features extracted from the match.
+In a Spain vs. Brazil match, Tree 1 might predict a Spain win, but Tree 2 might predict a draw and maybe Tree 2 predicts Brazil to win.
+The random forest aggregates all of our `x` tree's prediction.
+
+As a result, we are left with a chart like result:
+
+![alt text](/2026-wc/rf-chart-result.png)
+
+which we can convert to probabilities by dividing each count by the number of trees:
+
+```json
+{ "home win": 0.70333333333, "draw": 0.13, "away win": 0.16666666666 }
+```
+
+Look at that! Our random forest is able to predict the outcome of a match.
+
+Lastly, the repo adds a calibration step that will compare against the data one more time to see if the probability makes sense which is done by the `CalibratedClassifierCV` from scikit-learn. But this is the basic idea, the forest combines many slightly different opinions into probabilities for a match outcome.
+
+# Monte Carlo Simulation
+
+Now that we can predict a match, we can simulate an entire World Cup.
+
+For the Group Stage, we predict the 3 matches that each team plays and pick the top two teams of each group and the 8 best third-place finishers. For the Knockout Stage, we predict the 16 matches in the Round of 32, the 8 matches in the Round of 16, the 4 matches in the quarter-finals, the 2 matches in the semi-finals, and finally the final.
+
+From one simulation, we might predict Argentina to have won the final, but based on the outcome of the 2026 World Cup, that was not the case.
+Therefore, we simulate the World Cup more than once. In my case, I simulated 20,000 World Cups. We track, for each country, whether they advance, reach the Round of 16, the quarter-finals, the semi-finals, the final, or win the title.
+In the end, I was left with [predictions_2026.csv](https://github.com/jstephenhuang/2026-world-cup/blob/main/predictions_2026.csv).
+
+# Conclusion
+
+This was a really fun project. It proved to me that it is possible to learn hard concepts on your own. I never took a class of machine learning. Even though it took a lot of time, as long as you stay curious and ask a lot of questions, you will evenutally understand it in the end.
+
+I definitely want to revisit this in the future such as trying to predict March Madness, but with an improved and more time invested strategy.
