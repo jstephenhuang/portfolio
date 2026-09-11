@@ -1,3 +1,3 @@
 export const features = {
-  galleryPages: false,
+  journalPage: false,
 } as const;

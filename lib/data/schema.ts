@@ -4,7 +4,7 @@ const dumpIdPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const markdownSourcePattern = /^[a-zA-Z0-9][a-zA-Z0-9/_-]*\.md$/;
 
 export const dumpIdSchema = z.string().regex(dumpIdPattern);
-export const galleryIdSchema = z.enum(["home", "work", "projects", "journal"]);
+export const galleryIdSchema = z.enum(["home", "experience", "projects", "journal"]);
 
 const isCalendarDate = (value: string): boolean => {
   const isoDate = value.replaceAll("/", "-");
@@ -29,6 +29,13 @@ export const itemLinksSchema = z.object({
   general: z.array(generalLinkSchema).optional(),
 });
 
+export const workDetailsSchema = z.object({
+  role: z.string().min(1),
+  startDate: z.string().min(1),
+  endDate: z.string().min(1),
+  location: z.string().min(1),
+});
+
 export const itemInteractionSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("link"),
@@ -46,10 +53,12 @@ export const itemSchema = z.object({
   description: z.string(),
   thumbnail: z.string().min(1),
   firstImage: z.string().min(1),
+  firstImageWidth: z.number().positive().optional(),
   hideThumbnailTitle: z.boolean().optional(),
-  width: z.number().positive(),
+  thumbWidth: z.number().positive(),
   defaultPosition: positionSchema,
   links: itemLinksSchema,
+  work: workDetailsSchema.optional(),
   interaction: itemInteractionSchema.default({ type: "link" }),
 });
 
@@ -101,6 +110,7 @@ export const dumpMetadataSchema = itemSchema.extend({
 });
 
 export type Position = z.infer<typeof positionSchema>;
+export type WorkDetails = z.infer<typeof workDetailsSchema>;
 export type ItemInteraction = z.infer<typeof itemInteractionSchema>;
 export type Item = z.infer<typeof itemSchema>;
 export type GalleryId = z.infer<typeof galleryIdSchema>;

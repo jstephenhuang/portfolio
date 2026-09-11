@@ -1,6 +1,5 @@
-import { GitHubLogoIcon, Link2Icon, VideoIcon } from "@radix-ui/react-icons";
-
-import { Image, Link } from "@/components/ui";
+import ItemLinks from "@/app/_components/ItemLinks";
+import { Image } from "@/components/ui";
 import { type Item } from "@/lib/data";
 
 import styles from "./styles.module.scss";
@@ -18,25 +17,7 @@ const Header: React.FC<HeaderProps> = ({ item }) => {
       <div className={styles.content}>
         <h1 className={styles.title}>{item.title}</h1>
         <p className={styles.description}>{item.description}</p>
-        <div className={styles.links}>
-          {item.links.youtube && (
-            <Link className={styles.link} href={item.links.youtube} target="_blank" rel="noreferrer">
-              <VideoIcon className={styles.icon} />
-              YouTube
-            </Link>
-          )}
-          {item.links.github && (
-            <Link className={styles.link} href={item.links.github} target="_blank" rel="noreferrer">
-              <GitHubLogoIcon className={styles.icon} />
-            </Link>
-          )}
-          {item.links.general?.map((link) => (
-            <Link className={styles.link} href={link.href} target="_blank" rel="noreferrer" key={link.href}>
-              <Link2Icon className={styles.icon} />
-              {link.label && link.label}
-            </Link>
-          ))}
-        </div>
+        <ItemLinks links={item.links} />
       </div>
     </header>
   );

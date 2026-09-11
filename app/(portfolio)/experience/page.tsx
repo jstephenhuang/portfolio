@@ -5,23 +5,21 @@ import { getGalleryItems } from "@/lib/data/galleries";
 import { isErr } from "@/lib/error";
 
 export const metadata: Metadata = {
-  title: "Projects | jsh",
+  title: "Experience | jsh",
 };
 
-const ProjectsPage: React.FC = async () => {
-  const itemsResult = await getGalleryItems("projects");
+const ExperiencePage: React.FC = async () => {
+  const itemsResult = await getGalleryItems("experience");
 
   if (isErr(itemsResult)) throw itemsResult.error;
 
   return (
-    <Gallery.Root items={itemsResult.data} storageKey="projects-items">
+    <Gallery.Root items={itemsResult.data} storageKey="experience-items">
       {/* <Gallery.Description>
-        <p>
-          <strong>cool</strong> things ive built
-        </p>
+        <p>places ive worked</p>
       </Gallery.Description> */}
     </Gallery.Root>
   );
 };
 
-export default ProjectsPage;
+export default ExperiencePage;

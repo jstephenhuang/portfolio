@@ -18,13 +18,9 @@ const THEME_TRANSITION_DURATION = 240;
 
 const navigationItems = [
   { label: "jsh", href: "/" },
-  ...(features.galleryPages
-    ? [
-        { label: "work", href: "/work" },
-        { label: "projects", href: "/projects" },
-        { label: "journal", href: "/journal" },
-      ]
-    : []),
+  { label: "experience", href: "/experience" },
+  { label: "projects", href: "/projects" },
+  ...(features.journalPage ? [{ label: "journal", href: "/journal" }] : []),
 ] as const;
 
 const getNextPhysicsValue = (value: number, direction: 1 | -1 = 1) => {

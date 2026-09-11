@@ -4,12 +4,12 @@
   "description": "An automated pipeline that scrapes reddit creepypastas, generates a scripts, generates a narration, generates images, assembles the final video, and uploads it to youtube.",
   "thumbnail": "/yap/thumb.png",
   "firstImage": "/yap/thumb.png",
-  "width": 150,
+  "thumbWidth": 150,
   "defaultPosition": {
     "x": 0.74,
     "y": 0.28
   },
-  "galleries": ["home", "projects"],
+  "galleries": ["projects"],
   "links": {
     "github": "https://github.com/jstephenhuang/yap",
     "general": [

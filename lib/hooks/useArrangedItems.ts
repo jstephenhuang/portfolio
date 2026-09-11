@@ -1,7 +1,7 @@
 "use client";
 
-import { useLocalStorage, useMounted } from "@mantine/hooks";
-import { useCallback, useMemo } from "react";
+import { useLocalStorage } from "@mantine/hooks";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { type Item, type Position } from "../data";
 
@@ -50,12 +50,18 @@ const normalizeZIndexes = (rawItems: Item[], storedArrangements: StoredArrangeme
 };
 
 export const useArrangedItems = (rawItems: Item[], key: string) => {
-  const mounted = useMounted();
+  const [isHydrated, setIsHydrated] = useState(false);
   const [storedArrangements, setStoredArrangements, resetStoredArrangements] = useLocalStorage<StoredArrangements>({
     key,
     defaultValue: {},
-    getInitialValueInEffect: false,
+    getInitialValueInEffect: true,
   });
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => setIsHydrated(true));
+
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
 
   const arrangedItems = useMemo(() => arrangeItems(rawItems, storedArrangements), [rawItems, storedArrangements]);
 
@@ -107,7 +113,7 @@ export const useArrangedItems = (rawItems: Item[], key: string) => {
 
   return {
     arrangedItems,
-    isLoading: !mounted,
+    isLoading: !isHydrated,
     reset,
     savePosition,
     bringForward,

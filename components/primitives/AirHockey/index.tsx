@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, type PanInfo, useAnimationFrame, useDragControls, useMotionValue } from "motion/react";
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { Provider, type ProviderProps, useAirHockeyContext } from "./Context";
 import { type Bounds, getBounds, resolveCollision, type Vector } from "./physics";
@@ -72,6 +72,7 @@ const Item: React.FC<ItemProps> = ({
   const isDraggingRef = useRef(false);
   const isMovingRef = useRef(false);
   const hasInitializedRef = useRef(false);
+  const [isPositioned, setIsPositioned] = useState(false);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
@@ -108,6 +109,7 @@ const Item: React.FC<ItemProps> = ({
 
       x.set(bounds.minX + normalizedX * (bounds.maxX - bounds.minX));
       y.set(bounds.minY + normalizedY * (bounds.maxY - bounds.minY));
+      setIsPositioned(true);
       return;
     }
 
@@ -115,11 +117,13 @@ const Item: React.FC<ItemProps> = ({
     y.set(Math.min(bounds.maxY, Math.max(bounds.minY, y.get())));
   }, [initialX, initialY, rinkRef, x, y]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const rink = rinkRef.current;
     const item = itemRef.current;
 
     if (!rink || !item) return;
+
+    measureBounds();
 
     const observer = new ResizeObserver(measureBounds);
 
@@ -259,7 +263,7 @@ const Item: React.FC<ItemProps> = ({
       onDragEnd={handleDragEnd}
       onPointerCancelCapture={handlePointerCancelCapture}
       onPointerDownCapture={handlePointerDownCapture}
-      style={{ position: "absolute", ...style, x, y }}
+      style={{ position: "absolute", ...style, visibility: isPositioned ? undefined : "hidden", x, y }}
     >
       {children}
     </motion.div>

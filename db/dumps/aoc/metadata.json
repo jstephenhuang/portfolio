@@ -4,12 +4,12 @@
   "description": "my humble solutions to Advent of Code problems.",
   "thumbnail": "/aoc/logo.png",
   "firstImage": "/aoc/logo.png",
-  "width": 150,
+  "thumbWidth": 150,
   "defaultPosition": {
     "x": 0.68,
     "y": 0.62
   },
-  "galleries": ["home", "journal"],
+  "galleries": ["projects", "journal"],
   "links": {
     "github": "https://github.com/jstephenhuang/AoC",
     "general": [

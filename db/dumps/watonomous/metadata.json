@@ -1,0 +1,32 @@
+{
+  "id": "watonomous",
+  "title": "watonomous",
+  "description": "building our autonomous vehicle Eve with Watonomous. (more details to come...)",
+  "thumbnail": "/watonomous/logo.png",
+  "firstImage": "/watonomous/logo.png",
+  "firstImageWidth": 300,
+  "thumbWidth": 150,
+  "defaultPosition": {
+    "x": 0.78,
+    "y": 0.14
+  },
+  "interaction": {
+    "type": "expandable"
+  },
+  "galleries": ["home"],
+  "work": {
+    "role": "Robotics Software Engineer",
+    "startDate": "Sep. 2024",
+    "endDate": "Present",
+    "location": "Waterloo, ON"
+  },
+  "links": {
+    "general": [
+      {
+        "label": "WATonomous",
+        "href": "https://watonomous.ca/"
+      }
+    ]
+  },
+  "body": {}
+}

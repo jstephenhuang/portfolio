@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 const JournalPage: React.FC = async () => {
-  if (!features.galleryPages) notFound();
+  if (!features.journalPage) notFound();
 
   const itemsResult = await getGalleryItems("journal");
 

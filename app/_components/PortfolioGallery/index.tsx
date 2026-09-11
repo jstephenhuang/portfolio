@@ -46,7 +46,8 @@ const Root: React.FC<React.PropsWithChildren<PortfolioGalleryProps>> = ({ childr
               style={
                 {
                   zIndex: item.zIndex,
-                  "--item-width": `${item.width}px`,
+                  "--item-width": `${item.thumbWidth}px`,
+                  "--first-image-width": item.firstImageWidth ? `${item.firstImageWidth}px` : "100%",
                 } as React.CSSProperties
               }
               onPointerDown={() => {

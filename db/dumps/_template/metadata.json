@@ -4,8 +4,9 @@
   "description": "A short project description.",
   "thumbnail": "/project/thumb.png",
   "firstImage": "/project/first-image.png",
+  "firstImageWidth": 360,
   "hideThumbnailTitle": false,
-  "width": 240,
+  "thumbWidth": 240,
   "defaultPosition": {
     "x": 0.5,
     "y": 0.5

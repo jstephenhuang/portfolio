@@ -2,7 +2,7 @@ import { mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 const validDumpId = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const validGalleries = new Set(["home", "work", "projects", "journal"]);
+const validGalleries = new Set(["home", "experience", "projects", "journal"]);
 const [id, galleryList] = process.argv.slice(2);
 const requestedGalleries = galleryList?.split(",").filter(Boolean) ?? [];
 
@@ -38,7 +38,7 @@ const metadata = {
   thumbnail: `/${id}/thumb.png`,
   firstImage: `/${id}/first-image.png`,
   hideThumbnailTitle: false,
-  width: 240,
+  thumbWidth: 240,
   defaultPosition: { x: 0.5, y: 0.5 },
   interaction: { type: "link" },
   galleries,

@@ -1,0 +1,32 @@
+{
+  "id": "fellow",
+  "title": "fellow",
+  "description": "contributing to the #1 secure meeting assistant Fellow as a software engineer intern.",
+  "thumbnail": "/fellow/logo.png",
+  "firstImage": "/fellow/logo.png",
+  "firstImageWidth": 150,
+  "thumbWidth": 150,
+  "defaultPosition": {
+    "x": 0.78,
+    "y": 0.14
+  },
+  "interaction": {
+    "type": "expandable"
+  },
+  "galleries": ["experience"],
+  "work": {
+    "role": "Software Engineer Intern",
+    "startDate": "May 2026",
+    "endDate": "Aug. 2026",
+    "location": "Montreal, QC"
+  },
+  "links": {
+    "general": [
+      {
+        "label": "Fellow",
+        "href": "https://fellow.ai/"
+      }
+    ]
+  },
+  "body": {}
+}

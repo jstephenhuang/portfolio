@@ -4,10 +4,10 @@
   "description": "My resume.",
   "thumbnail": "/resume/icon.png",
   "firstImage": "/resume/icon.png",
-  "width": 150,
+  "thumbWidth": 150,
   "defaultPosition": {
-    "x": 0.76,
-    "y": 0.7
+    "x": 0.82,
+    "y": 0.78
   },
   "interaction": {
     "type": "link",

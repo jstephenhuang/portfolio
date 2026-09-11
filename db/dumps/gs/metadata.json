@@ -1,0 +1,32 @@
+{
+  "id": "gs",
+  "title": "garment system",
+  "description": "digital garment suite",
+  "thumbnail": "/gs/logo.png",
+  "firstImage": "/gs/logo.png",
+  "firstImageWidth": 150,
+  "thumbWidth": 140,
+  "defaultPosition": {
+    "x": 0.16,
+    "y": 0.76
+  },
+  "interaction": {
+    "type": "expandable"
+  },
+  "galleries": ["experience"],
+  "work": {
+    "role": "Software Engineer",
+    "startDate": "Feb. 2025",
+    "endDate": "Present",
+    "location": "Montreal, QC"
+  },
+  "links": {
+    "general": [
+      {
+        "label": "Garment System",
+        "href": "https://garmentsystem.com/"
+      }
+    ]
+  },
+  "body": {}
+}

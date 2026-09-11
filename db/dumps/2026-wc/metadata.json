@@ -4,7 +4,7 @@
   "description": "I trained a random forest on historical international matches to predict match outcomes, then ran 20,000 Monte Carlo simulations of the 2026 World Cup to build the bracket that helped me win a bracket challenge with a prize of $400.",
   "thumbnail": "/2026-wc/logo.gif",
   "firstImage": "/2026-wc/logo.gif",
-  "width": 150,
+  "thumbWidth": 150,
   "defaultPosition": {
     "x": 0.12,
     "y": 0.18

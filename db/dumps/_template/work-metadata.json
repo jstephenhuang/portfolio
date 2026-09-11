@@ -1,0 +1,25 @@
+{
+  "id": "company-id",
+  "title": "company name",
+  "description": "A concise description of the work.",
+  "thumbnail": "/company/logo.png",
+  "firstImage": "/company/logo.png",
+  "firstImageWidth": 180,
+  "thumbWidth": 150,
+  "defaultPosition": {
+    "x": 0.5,
+    "y": 0.5
+  },
+  "interaction": {
+    "type": "expandable"
+  },
+  "galleries": ["experience"],
+  "work": {
+    "role": "Software Engineer",
+    "startDate": "Jan. 2026",
+    "endDate": "Present",
+    "location": "Waterloo, ON"
+  },
+  "links": {},
+  "body": {}
+}

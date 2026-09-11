@@ -4,12 +4,12 @@
   "description": "Following Robert Nystrom's book Crafting Interpreters but instead of using Java, I'm using C++ and sharing my thoughts along the way.",
   "thumbnail": "/crafting-interpreters/yak.png",
   "firstImage": "/crafting-interpreters/yak.png",
-  "width": 150,
+  "thumbWidth": 150,
   "defaultPosition": {
     "x": 0.42,
     "y": 0.72
   },
-  "galleries": ["home", "projects"],
+  "galleries": ["projects"],
   "links": {
     "github": "https://github.com/jstephenhuang/language-translators/tree/main/lox",
     "general": [
