@@ -8,9 +8,9 @@ const Root: React.FC = async () => {
   if (isErr(itemsResult)) throw itemsResult.error;
 
   return (
-    <Gallery.Root items={itemsResult.data} storageKey="root-items">
+    <Gallery.Root items={itemsResult.data} storageKey="root-items" canvas>
       <Gallery.Description>
-        <p>Drag and throw items around.</p>
+        <p>Drag and throw items around. Pinch to zoom.</p>
       </Gallery.Description>
     </Gallery.Root>
   );

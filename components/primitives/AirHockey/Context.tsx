@@ -1,5 +1,7 @@
 import { createContext, PropsWithChildren, RefObject, useContext } from "react";
 
+import type { CanvasView, ItemRect } from "./physics";
+
 export type AirHockeyPhysics = {
   friction: number;
   bounce: number;
@@ -9,23 +11,22 @@ interface AirHockeyContextValue {
   physics: AirHockeyPhysics;
   off: boolean;
   rinkRef: RefObject<HTMLDivElement | null>;
+  view: CanvasView;
+  register: (element: HTMLDivElement, measure: () => ItemRect) => () => void;
+  setZoom: (zoom: number) => void;
+  fitAll: () => void;
 }
 
-export interface ProviderProps {
-  physics: AirHockeyPhysics;
-  off?: boolean;
-  rinkRef: RefObject<HTMLDivElement | null>;
-}
+export type ProviderProps = Omit<AirHockeyContextValue, "off"> & { off?: boolean };
 
 const AirHockeyContext = createContext<AirHockeyContextValue | null>(null);
 
-export const Provider: React.FC<PropsWithChildren<ProviderProps>> = ({ children, physics, off = false, rinkRef }) => {
+export const Provider: React.FC<PropsWithChildren<ProviderProps>> = ({ children, off = false, ...value }) => {
   return (
     <AirHockeyContext.Provider
       value={{
-        physics,
+        ...value,
         off,
-        rinkRef,
       }}
     >
       {children}

@@ -14,6 +14,7 @@ import styles from "./styles.module.scss";
 interface PortfolioGalleryProps {
   items: Item[];
   storageKey: string;
+  canvas?: boolean;
 }
 
 const Description: React.FC<React.ComponentPropsWithRef<"div">> = ({ children, className, ...props }) => (
@@ -22,18 +23,20 @@ const Description: React.FC<React.ComponentPropsWithRef<"div">> = ({ children, c
   </div>
 );
 
-const Root: React.FC<React.PropsWithChildren<PortfolioGalleryProps>> = ({ children, items, storageKey }) => {
+const Root: React.FC<React.PropsWithChildren<PortfolioGalleryProps>> = ({ children, items, storageKey, canvas = false }) => {
   const { bounce, friction, layout } = useSettings();
   const { arrangedItems, isLoading, savePosition, bringForward } = useArrangedItems(items, storageKey);
   const isLocked = layout === "lock";
 
   return (
-    <main className={styles.page}>
+    <main className={cx(styles.page, canvas && styles.canvas)}>
       {children}
       <AirHockey.Root
         className={`${styles.board} ${isLocked ? styles.fixed : ""}`}
         physics={{ bounce, friction }}
         off={isLocked}
+        canvas={canvas}
+        controls={canvas ? <AirHockey.ZoomControls className={styles.zoomControls} /> : undefined}
       >
         {!isLoading &&
           arrangedItems.map((item) => (
