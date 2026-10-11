@@ -13,8 +13,7 @@
 
 .topNav {
   top: var(--spacing-country);
-
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
 .botNav {
@@ -32,17 +31,6 @@
   height: fit-content;
 
   pointer-events: auto;
-}
-
-.navigationLinks {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--spacing-street);
-  pointer-events: auto;
-}
-
-.activeLink {
-  font-weight: var(--font-weight-bold);
 }
 
 .icon {

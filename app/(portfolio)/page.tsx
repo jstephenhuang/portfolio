@@ -1,19 +1,5 @@
-import * as Gallery from "@/app/_components/PortfolioGallery";
-import { getGalleryItems } from "@/lib/data/galleries";
-import { isErr } from "@/lib/error";
+import PortfolioPresentation from "@/app/_components/PortfolioPresentation";
 
-const Root: React.FC = async () => {
-  const itemsResult = await getGalleryItems("home");
-
-  if (isErr(itemsResult)) throw itemsResult.error;
-
-  return (
-    <Gallery.Root items={itemsResult.data} storageKey="root-items">
-      <Gallery.Description>
-        <p>Drag and throw items around.</p>
-      </Gallery.Description>
-    </Gallery.Root>
-  );
-};
+const Root: React.FC = () => <PortfolioPresentation />;
 
 export default Root;

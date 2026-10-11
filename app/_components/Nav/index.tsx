@@ -2,65 +2,16 @@
 
 import { useMounted } from "@mantine/hooks";
 import { EnvelopeClosedIcon, GitHubLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
-import cx from "classnames";
 import { AnimatePresence, motion } from "motion/react";
-import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useEffect, useRef } from "react";
 
 import { Button, Link } from "@/components/ui";
-import { features } from "@/lib/features";
 
 import styles from "./styles.module.scss";
 import { useSettings } from "../contexts/SettingsContext";
 
 const THEME_TRANSITION_DURATION = 240;
-
-const navigationItems = [
-  { label: "jsh", href: "/" },
-  { label: "experience", href: "/experience" },
-  { label: "projects", href: "/projects" },
-  ...(features.journalPage ? [{ label: "journal", href: "/journal" }] : []),
-] as const;
-
-const getNextPhysicsValue = (value: number, direction: 1 | -1 = 1) => {
-  return ((Math.round(value * 10) + direction + 11) % 11) / 10;
-};
-
-type PhysicsToggleProps = {
-  label: string;
-  value: number;
-  onChange: (value: number) => void;
-};
-
-const PhysicsToggle: React.FC<PhysicsToggleProps> = ({ label, value, onChange }) => {
-  const controlRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    const control = controlRef.current;
-
-    if (!control) return;
-
-    const handleWheel = (event: WheelEvent) => {
-      event.preventDefault();
-      onChange(getNextPhysicsValue(value, event.deltaY < 0 ? 1 : -1));
-    };
-
-    control.addEventListener("wheel", handleWheel, { passive: false });
-
-    return () => control.removeEventListener("wheel", handleWheel);
-  }, [onChange, value]);
-
-  return (
-    <Button.Link
-      ref={controlRef}
-      className={styles.settingsControl}
-      onClick={() => onChange(getNextPhysicsValue(value))}
-    >
-      {label} {value.toFixed(1)}
-    </Button.Link>
-  );
-};
 
 const ThemeToggle: React.FC = () => {
   const mounted = useMounted();
@@ -105,61 +56,26 @@ const ThemeToggle: React.FC = () => {
   );
 };
 
-const LayoutToggle: React.FC = () => {
-  const { isLoading, layout, setLayout } = useSettings();
-  const isLocked = layout === "lock";
-
-  if (isLoading) return <span>loading...</span>;
-
-  return <Button.Link onClick={() => setLayout(isLocked ? "free" : "lock")}>{isLocked ? "free" : "lock"}</Button.Link>;
-};
-
 const Nav: React.FC = () => {
-  const pathname = usePathname();
-  const { isLoading, isSettingsOpen, friction, bounce, layout, setIsSettingsOpen, setBounce, setFriction } =
-    useSettings();
-  const isLocked = layout === "lock";
+  const { isSettingsOpen, setIsSettingsOpen } = useSettings();
 
   return (
     <div>
       <nav className={styles.topNav}>
-        <div className={styles.navigationLinks}>
-          {navigationItems.map(({ href, label }) => {
-            const active = pathname === href;
-
-            return (
-              <Link
-                className={cx(styles.link, active && styles.activeLink)}
-                href={href}
-                aria-current={active ? "page" : undefined}
-                key={href}
-              >
-                {label}
-              </Link>
-            );
-          })}
-        </div>
-        <div className={cx(styles.settings)}>
+        <div className={styles.settings}>
           <Button.Toggle active={isSettingsOpen} onClick={() => setIsSettingsOpen(!isSettingsOpen)}>
             settings
           </Button.Toggle>
           <AnimatePresence initial={false}>
             {isSettingsOpen && (
               <motion.div
-                className={cx(styles.settingsContent)}
+                className={styles.settingsContent}
                 initial={{ height: 0, opacity: 0, y: -4 }}
                 animate={{ height: "auto", opacity: 1, y: 0 }}
                 exit={{ height: 0, opacity: 0, y: -4, pointerEvents: "none" }}
                 transition={{ duration: 0.18, ease: "easeOut" }}
               >
                 <ThemeToggle />
-                <LayoutToggle />
-                {!isLoading && !isLocked && (
-                  <>
-                    <PhysicsToggle label="friction" value={friction} onChange={setFriction} />
-                    <PhysicsToggle label="bounce" value={bounce} onChange={setBounce} />
-                  </>
-                )}
               </motion.div>
             )}
           </AnimatePresence>
